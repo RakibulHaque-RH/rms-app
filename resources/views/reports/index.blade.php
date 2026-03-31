@@ -53,6 +53,28 @@
     </div>
 </div>
 
+<!-- Most Popular Dish -->
+<div class="card mb-4 fade-in fade-in-delay-1">
+    <div class="card-body py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <div class="text-muted" style="font-size:12px">Most Popular Dish</div>
+            <div style="font-size:20px;font-weight:700">
+                {{ $mostPopularDish?->name ?? 'No sales data in selected range' }}
+            </div>
+        </div>
+        <div class="d-flex gap-3">
+            <div class="text-center">
+                <div class="text-muted" style="font-size:12px">Qty Sold</div>
+                <div style="font-size:20px;font-weight:700;color:var(--primary)">{{ $mostPopularDish?->total_quantity ?? 0 }}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-muted" style="font-size:12px">Revenue</div>
+                <div style="font-size:20px;font-weight:700;color:var(--success)">${{ number_format($mostPopularDish?->total_revenue ?? 0, 2) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row g-4 mb-4">
     <!-- Revenue Chart -->
     <div class="col-xl-8 fade-in">

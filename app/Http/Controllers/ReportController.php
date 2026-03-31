@@ -27,8 +27,12 @@ class ReportController extends Controller
 
         $topItems = OrderItem::whereBetween('order_items.created_at', [$startDate, $endDate . ' 23:59:59'])
             ->join('menus', 'order_items.menu_id', '=', 'menus.id')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->where('orders.status', '!=', 'cancelled')
             ->select('menus.name', DB::raw('SUM(order_items.quantity) as total_quantity'), DB::raw('SUM(order_items.subtotal) as total_revenue'))
             ->groupBy('menus.name')->orderByDesc('total_quantity')->take(10)->get();
+
+        $mostPopularDish = $topItems->first();
 
         $categoryRevenue = OrderItem::whereBetween('order_items.created_at', [$startDate, $endDate . ' 23:59:59'])
             ->join('menus', 'order_items.menu_id', '=', 'menus.id')
@@ -37,7 +41,7 @@ class ReportController extends Controller
 
         return view('reports.index', compact(
             'startDate', 'endDate', 'totalRevenue', 'totalOrders',
-            'completedOrders', 'cancelledOrders', 'dailyRevenue', 'topItems', 'categoryRevenue'
+            'completedOrders', 'cancelledOrders', 'dailyRevenue', 'topItems', 'categoryRevenue', 'mostPopularDish'
         ));
     }
 }

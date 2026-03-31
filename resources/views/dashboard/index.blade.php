@@ -51,6 +51,14 @@
                     <div><div style="font-size:13px;color:var(--text-secondary)">Menu Items</div><div style="font-size:20px;font-weight:700">{{ $totalMenuItems }}</div></div>
                     <div class="stat-icon" style="width:42px;height:42px;margin:0;font-size:16px;background:rgba(245,158,11,.1);color:var(--warning)"><i class="fas fa-utensils"></i></div>
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-3" style="border-bottom:1px solid var(--border)">
+                    <div>
+                        <div style="font-size:13px;color:var(--text-secondary)">Most Popular Dish</div>
+                        <div style="font-size:16px;font-weight:700">{{ $mostPopularDish?->name ?? 'No sales yet' }}</div>
+                        <div style="font-size:12px;color:var(--text-muted)">{{ $mostPopularDish?->total_quantity ?? 0 }} sold</div>
+                    </div>
+                    <div class="stat-icon" style="width:42px;height:42px;margin:0;font-size:16px;background:rgba(6,182,212,.1);color:var(--info)"><i class="fas fa-fire"></i></div>
+                </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div><div style="font-size:13px;color:var(--text-secondary)">Staff Members</div><div style="font-size:20px;font-weight:700">{{ $totalStaff }}</div></div>
                     <div class="stat-icon" style="width:42px;height:42px;margin:0;font-size:16px;background:rgba(16,185,129,.1);color:var(--success)"><i class="fas fa-users"></i></div>
