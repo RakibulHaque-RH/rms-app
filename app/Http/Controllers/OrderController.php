@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Menu;
 use App\Models\Table;
+use App\Models\Inventory;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -61,11 +62,6 @@ class OrderController extends Controller
                 'subtotal' => $menuItem->price * $item['quantity'],
                 'notes' => $item['notes'] ?? null,
             ]);
-
-            $inventory = \App\Models\Inventory::where('item_name', $menuItem->name)->first();
-            if ($inventory && $inventory->quantity >= $item['quantity']) {
-                $inventory->decrement('quantity', $item['quantity']);
-            }
         }
 
         $order->calculateTotal();
@@ -83,12 +79,18 @@ class OrderController extends Controller
 
     public function update(Request $request, Order $order)
     {
+        $previousStatus = $order->status;
+
         $request->validate([
             'status' => 'required|in:pending,preparing,ready,served,completed,cancelled',
             'notes' => 'nullable|string',
         ]);
 
         $order->update(['status' => $request->status, 'notes' => $request->notes]);
+
+        if (in_array($request->status, ['served', 'completed']) && $previousStatus !== $request->status) {
+            $this->deductInventoryForOrder($order->fresh('items.menu'));
+        }
 
         if (in_array($request->status, ['completed', 'cancelled'])) {
             $active = Order::where('table_id', $order->table_id)->where('id', '!=', $order->id)
@@ -143,5 +145,32 @@ class OrderController extends Controller
     {
         $order->load(['table', 'user', 'items.menu']);
         return view('orders.receipt', compact('order'));
+    }
+
+    private function deductInventoryForOrder(Order $order): void
+    {
+        if ($order->inventory_deducted_at) {
+            return;
+        }
+
+        foreach ($order->items as $item) {
+            $menuName = strtolower(trim($item->menu->name ?? ''));
+            if ($menuName === '') {
+                continue;
+            }
+
+            $inventory = Inventory::query()
+                ->whereRaw('LOWER(item_name) = ?', [$menuName])
+                ->first();
+
+            if (!$inventory) {
+                continue;
+            }
+
+            $newQty = max((float) $inventory->quantity - (float) $item->quantity, 0);
+            $inventory->update(['quantity' => $newQty]);
+        }
+
+        $order->update(['inventory_deducted_at' => now()]);
     }
 }

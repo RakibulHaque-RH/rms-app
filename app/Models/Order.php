@@ -20,12 +20,14 @@ class Order extends Model
         'total_amount',
         'paid_amount',
         'paid_at',
+        'inventory_deducted_at',
         'notes'
     ];
     protected $casts = [
         'total_amount' => 'decimal:2',
         'paid_amount' => 'decimal:2',
         'paid_at' => 'datetime',
+        'inventory_deducted_at' => 'datetime',
     ];
 
     public function table()
