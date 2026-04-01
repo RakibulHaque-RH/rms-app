@@ -65,7 +65,7 @@
                                             {{ strtoupper($order->payment_method) }}</div>
                                     @endif
                                 </td>
-                                <td><strong>${{ number_format($order->total_amount, 2) }}</strong></td>
+                                <td><strong>৳{{ number_format($order->total_amount, 2) }}</strong></td>
                                 <td style="color:var(--text-muted);font-size:13px">
                                     {{ $order->created_at->format('M d, H:i') }}</td>
                                 <td>

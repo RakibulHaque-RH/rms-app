@@ -181,20 +181,20 @@
                 @foreach ($order->items as $item)
                     <tr>
                         <td>{{ $item->menu->name ?? 'Deleted Item' }}</td>
-                        <td class="right">${{ number_format($item->unit_price, 2) }}</td>
+                        <td class="right">৳{{ number_format($item->unit_price, 2) }}</td>
                         <td class="right">{{ $item->quantity }}</td>
-                        <td class="right">${{ number_format($item->subtotal, 2) }}</td>
+                        <td class="right">৳{{ number_format($item->subtotal, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
         <div class="summary">
-            <div class="summary-row"><span>Total</span><span>${{ number_format($order->total_amount, 2) }}</span></div>
-            <div class="summary-row"><span>Paid</span><span>${{ number_format($order->paid_amount ?? 0, 2) }}</span>
+            <div class="summary-row"><span>Total</span><span>৳{{ number_format($order->total_amount, 2) }}</span></div>
+            <div class="summary-row"><span>Paid</span><span>৳{{ number_format($order->paid_amount ?? 0, 2) }}</span>
             </div>
             <div class="summary-row summary-total">
-                <span>Due</span><span>${{ number_format(max((float) $order->total_amount - (float) ($order->paid_amount ?? 0), 0), 2) }}</span>
+                <span>Due</span><span>৳{{ number_format(max((float) $order->total_amount - (float) ($order->paid_amount ?? 0), 0), 2) }}</span>
             </div>
         </div>
 

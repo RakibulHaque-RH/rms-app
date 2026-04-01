@@ -59,16 +59,16 @@
                                                 <br><small class="text-muted">{{ $item->notes }}</small>
                                             @endif
                                         </td>
-                                        <td>${{ number_format($item->unit_price, 2) }}</td>
+                                        <td>৳{{ number_format($item->unit_price, 2) }}</td>
                                         <td>{{ $item->quantity }}</td>
-                                        <td><strong>${{ number_format($item->subtotal, 2) }}</strong></td>
+                                        <td><strong>৳{{ number_format($item->subtotal, 2) }}</strong></td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr style="background:#f8fafc">
                                     <td colspan="3" class="text-end fw-bold">Total</td>
-                                    <td class="fw-bold" style="font-size:18px">${{ number_format($order->total_amount, 2) }}
+                                    <td class="fw-bold" style="font-size:18px">৳{{ number_format($order->total_amount, 2) }}
                                     </td>
                                 </tr>
                             </tfoot>
@@ -130,7 +130,7 @@
                                 max="{{ $order->total_amount }}" class="form-control"
                                 value="{{ old('paid_amount', $order->payment_status === 'unpaid' ? $order->total_amount : $order->paid_amount) }}"
                                 required>
-                            <small class="text-muted">Order total: ${{ number_format($order->total_amount, 2) }}</small>
+                            <small class="text-muted">Order total: ৳{{ number_format($order->total_amount, 2) }}</small>
                         </div>
 
                         <div class="mb-3">
