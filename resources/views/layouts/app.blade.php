@@ -718,10 +718,10 @@
                 <div class="page-subtitle">@yield('subtitle', '')</div>
             </div>
             <div class="navbar-actions">
-                <button class="nav-btn" title="Notifications">
+                <a href="{{ route('notifications.index') }}" class="nav-btn" title="Notifications">
                     <i class="fas fa-bell"></i>
                     <span class="notif-dot"></span>
-                </button>
+                </a>
                 <a href="{{ route('settings.index') }}" class="nav-btn" title="Settings"><i class="fas fa-cog"></i></a>
             </div>
         </header>
