@@ -20,15 +20,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/', fn() => redirect()->route('dashboard'));
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('orders', OrderController::class);
+    Route::patch('/orders/{order}/payment', [OrderController::class, 'recordPayment'])->name('orders.payment');
     Route::resource('menu', MenuController::class);
-    
+
     // Kitchen Display
     Route::get('/kitchen', [\App\Http\Controllers\KitchenController::class, 'index'])->name('kitchen.index');
     Route::patch('/kitchen/{order}', [\App\Http\Controllers\KitchenController::class, 'updateStatus'])->name('kitchen.update');
-    
+
     Route::resource('tables', TableController::class)->except(['create', 'show', 'edit']);
     Route::patch('/tables/{table}/status', [TableController::class, 'updateStatus'])->name('tables.status');
-    
+
     Route::middleware('role:manager,admin')->group(function () {
         Route::resource('inventory', InventoryController::class)->except(['create', 'show', 'edit']);
         Route::resource('staff', StaffController::class)->except(['create', 'show', 'edit']);

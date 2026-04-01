@@ -13,8 +13,12 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $query = Order::with(['table', 'user', 'items.menu']);
-        if ($request->filled('status')) { $query->where('status', $request->status); }
-        if ($request->filled('date')) { $query->whereDate('created_at', $request->date); }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->date);
+        }
         $orders = $query->latest()->paginate(15);
         return view('orders.index', compact('orders'));
     }
@@ -86,7 +90,9 @@ class OrderController extends Controller
         if (in_array($request->status, ['completed', 'cancelled'])) {
             $active = Order::where('table_id', $order->table_id)->where('id', '!=', $order->id)
                 ->whereNotIn('status', ['completed', 'cancelled'])->count();
-            if ($active === 0) { Table::where('id', $order->table_id)->update(['status' => 'available']); }
+            if ($active === 0) {
+                Table::where('id', $order->table_id)->update(['status' => 'available']);
+            }
         }
         return redirect()->route('orders.index')->with('success', 'Order updated successfully!');
     }
@@ -96,7 +102,37 @@ class OrderController extends Controller
         $tableId = $order->table_id;
         $order->delete();
         $active = Order::where('table_id', $tableId)->whereNotIn('status', ['completed', 'cancelled'])->count();
-        if ($active === 0) { Table::where('id', $tableId)->update(['status' => 'available']); }
+        if ($active === 0) {
+            Table::where('id', $tableId)->update(['status' => 'available']);
+        }
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully!');
+    }
+
+    public function recordPayment(Request $request, Order $order)
+    {
+        $request->validate([
+            'payment_method' => 'required|in:cash,bkash,rocket,card',
+            'paid_amount' => 'required|numeric|min:0.01|max:' . $order->total_amount,
+            'payment_reference' => 'nullable|string|max:100',
+        ]);
+
+        if (in_array($request->payment_method, ['bkash', 'rocket', 'card']) && blank($request->payment_reference)) {
+            return back()->withErrors([
+                'payment_reference' => 'Reference is required for bKash, Rocket, and card payments.',
+            ]);
+        }
+
+        $paidAmount = (float) $request->paid_amount;
+        $paymentStatus = $paidAmount >= (float) $order->total_amount ? 'paid' : 'partial';
+
+        $order->update([
+            'payment_method' => $request->payment_method,
+            'payment_reference' => $request->payment_reference,
+            'paid_amount' => $paidAmount,
+            'payment_status' => $paymentStatus,
+            'paid_at' => now(),
+        ]);
+
+        return redirect()->route('orders.edit', $order)->with('success', 'Payment recorded successfully.');
     }
 }

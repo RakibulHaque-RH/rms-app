@@ -9,12 +9,37 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order_number', 'table_id', 'user_id', 'status', 'total_amount', 'notes'];
-    protected $casts = ['total_amount' => 'decimal:2'];
+    protected $fillable = [
+        'order_number',
+        'table_id',
+        'user_id',
+        'status',
+        'payment_status',
+        'payment_method',
+        'payment_reference',
+        'total_amount',
+        'paid_amount',
+        'paid_at',
+        'notes'
+    ];
+    protected $casts = [
+        'total_amount' => 'decimal:2',
+        'paid_amount' => 'decimal:2',
+        'paid_at' => 'datetime',
+    ];
 
-    public function table() { return $this->belongsTo(Table::class); }
-    public function user() { return $this->belongsTo(User::class); }
-    public function items() { return $this->hasMany(OrderItem::class); }
+    public function table()
+    {
+        return $this->belongsTo(Table::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 
     public function calculateTotal()
     {
