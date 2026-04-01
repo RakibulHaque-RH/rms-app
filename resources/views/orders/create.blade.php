@@ -5,6 +5,15 @@
 @section('content')
     <form method="POST" action="{{ route('orders.store') }}" id="orderForm">
         @csrf
+
+        @if ($unconfiguredMenuCount > 0)
+            <div class="alert alert-warning fade show" role="alert">
+                <i class="fas fa-triangle-exclamation me-2"></i>
+                {{ $unconfiguredMenuCount }} menu item(s) are missing recipe ingredients and cannot be ordered yet.
+                Configure them in Menu Edit.
+            </div>
+        @endif
+
         <div class="row g-4">
             <!-- Order Details -->
             <div class="col-lg-8">
@@ -45,9 +54,10 @@
                             </h6>
                             <div class="row g-3 mb-4">
                                 @foreach ($items as $item)
+                                    @php $recipeCount = $item->menuIngredients->count(); @endphp
                                     <div class="col-md-6 col-lg-4">
                                         <div class="border rounded-3 p-3 h-100 menu-select-card"
-                                            style="cursor:pointer;transition:all .2s"
+                                            style="cursor:{{ $recipeCount > 0 ? 'pointer' : 'not-allowed' }};transition:all .2s;{{ $recipeCount === 0 ? 'opacity:.55;background:#f8fafc' : '' }}"
                                             onclick="toggleItem({{ $item->id }}, this)">
                                             <div class="d-flex justify-content-between align-items-start">
                                                 <div>
@@ -56,8 +66,13 @@
                                                     <div style="color:var(--text-muted);font-size:12px">
                                                         {{ Str::limit($item->description, 40) }}</div>
                                                     <div style="font-size:11px;color:var(--text-muted)" class="mt-1">
-                                                        {{ $item->menuIngredients->count() }} ingredient(s) per dish
+                                                        {{ $recipeCount }} ingredient(s) per dish
                                                     </div>
+                                                    @if ($recipeCount === 0)
+                                                        <div style="font-size:11px;color:#b45309" class="mt-1">
+                                                            Recipe missing: add ingredients in Menu Edit
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <span class="badge bg-primary">৳{{ number_format($item->price, 2) }}</span>
                                             </div>
@@ -130,14 +145,16 @@
             let selectedItems = {};
 
             function toggleItem(id, el) {
+                const meta = menuMeta[id];
+                if (!meta || !meta.ingredients || meta.ingredients.length === 0) {
+                    return;
+                }
+
                 if (selectedItems[id]) {
                     delete selectedItems[id];
                     el.classList.remove('selected');
                     el.querySelector('.qty-control').classList.add('d-none');
                 } else {
-                    const meta = menuMeta[id];
-                    if (!meta) return;
-
                     selectedItems[id] = {
                         name: meta.name,
                         price: meta.price,

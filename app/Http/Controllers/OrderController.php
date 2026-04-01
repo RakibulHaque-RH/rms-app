@@ -31,6 +31,7 @@ class OrderController extends Controller
     {
         $tables = Table::where('status', 'available')->orWhere('status', 'occupied')->get();
         $menus = Menu::with(['menuIngredients.inventory'])->where('is_available', true)->get();
+        $unconfiguredMenuCount = $menus->filter(fn($menu) => $menu->menuIngredients->isEmpty())->count();
         $menuItems = $menus->groupBy('category');
         $menuMeta = $menus->mapWithKeys(function ($menu) {
             return [$menu->id => [
@@ -47,7 +48,7 @@ class OrderController extends Controller
             ]];
         });
 
-        return view('orders.create', compact('tables', 'menuItems', 'menuMeta'));
+        return view('orders.create', compact('tables', 'menuItems', 'menuMeta', 'unconfiguredMenuCount'));
     }
 
     public function store(Request $request)
