@@ -44,6 +44,11 @@ class OrderController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        [$hasStock, $stockMessage] = $this->hasSufficientInventoryForItems($request->items);
+        if (!$hasStock) {
+            return back()->withErrors(['items' => $stockMessage])->withInput();
+        }
+
         $order = Order::create([
             'order_number' => Order::generateOrderNumber(),
             'table_id' => $request->table_id,
@@ -85,6 +90,19 @@ class OrderController extends Controller
             'status' => 'required|in:pending,preparing,ready,served,completed,cancelled',
             'notes' => 'nullable|string',
         ]);
+
+        if (in_array($request->status, ['served', 'completed']) && !$order->inventory_deducted_at) {
+            [$hasStock, $stockMessage] = $this->hasSufficientInventoryForItems(
+                $order->items->map(fn($item) => [
+                    'menu_id' => $item->menu_id,
+                    'quantity' => $item->quantity,
+                ])->toArray()
+            );
+
+            if (!$hasStock) {
+                return back()->withErrors(['status' => $stockMessage]);
+            }
+        }
 
         $order->update(['status' => $request->status, 'notes' => $request->notes]);
 
@@ -153,24 +171,91 @@ class OrderController extends Controller
             return;
         }
 
+        $deductions = [];
+
         foreach ($order->items as $item) {
-            $menuName = strtolower(trim($item->menu->name ?? ''));
-            if ($menuName === '') {
-                continue;
-            }
-
-            $inventory = Inventory::query()
-                ->whereRaw('LOWER(item_name) = ?', [$menuName])
-                ->first();
-
+            $inventory = $this->resolveInventoryForMenuName($item->menu->name ?? '');
             if (!$inventory) {
                 continue;
             }
 
-            $newQty = max((float) $inventory->quantity - (float) $item->quantity, 0);
+            $deductions[$inventory->id] = ($deductions[$inventory->id] ?? 0) + (float) $item->quantity;
+        }
+
+        foreach ($deductions as $inventoryId => $qty) {
+            $inventory = Inventory::find($inventoryId);
+            if (!$inventory) {
+                continue;
+            }
+
+            $newQty = max((float) $inventory->quantity - $qty, 0);
             $inventory->update(['quantity' => $newQty]);
         }
 
         $order->update(['inventory_deducted_at' => now()]);
+    }
+
+    private function hasSufficientInventoryForItems(array $items): array
+    {
+        $requiredByInventory = [];
+        $inventoryNames = [];
+
+        foreach ($items as $item) {
+            $menu = Menu::find($item['menu_id']);
+            if (!$menu) {
+                continue;
+            }
+
+            $inventory = $this->resolveInventoryForMenuName($menu->name);
+            if (!$inventory) {
+                continue;
+            }
+
+            $requiredByInventory[$inventory->id] = ($requiredByInventory[$inventory->id] ?? 0) + (float) $item['quantity'];
+            $inventoryNames[$inventory->id] = $inventory->item_name;
+        }
+
+        foreach ($requiredByInventory as $inventoryId => $requiredQty) {
+            $inventory = Inventory::find($inventoryId);
+            if (!$inventory) {
+                continue;
+            }
+
+            if ((float) $inventory->quantity < $requiredQty) {
+                return [
+                    false,
+                    'Not enough stock for ' . ($inventoryNames[$inventoryId] ?? 'an item') . '. Required: ' . $requiredQty . ', Available: ' . (float) $inventory->quantity,
+                ];
+            }
+        }
+
+        return [true, null];
+    }
+
+    private function resolveInventoryForMenuName(string $menuName): ?Inventory
+    {
+        $normalized = strtolower(trim($menuName));
+        if ($normalized === '') {
+            return null;
+        }
+
+        $exact = Inventory::query()
+            ->whereRaw('LOWER(item_name) = ?', [$normalized])
+            ->first();
+
+        if ($exact) {
+            return $exact;
+        }
+
+        $firstWord = explode(' ', $normalized)[0] ?? '';
+        if (strlen($firstWord) < 3) {
+            return null;
+        }
+
+        $matches = Inventory::query()
+            ->whereRaw('LOWER(item_name) like ?', [$firstWord . '%'])
+            ->get();
+
+        return $matches->count() === 1 ? $matches->first() : null;
     }
 }
