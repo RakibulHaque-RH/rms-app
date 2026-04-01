@@ -30,8 +30,24 @@ class OrderController extends Controller
     public function create()
     {
         $tables = Table::where('status', 'available')->orWhere('status', 'occupied')->get();
-        $menuItems = Menu::where('is_available', true)->get()->groupBy('category');
-        return view('orders.create', compact('tables', 'menuItems'));
+        $menus = Menu::with(['menuIngredients.inventory'])->where('is_available', true)->get();
+        $menuItems = $menus->groupBy('category');
+        $menuMeta = $menus->mapWithKeys(function ($menu) {
+            return [$menu->id => [
+                'name' => $menu->name,
+                'price' => (float) $menu->price,
+                'ingredients' => $menu->menuIngredients->map(function ($ingredient) {
+                    return [
+                        'inventory_id' => $ingredient->inventory_id,
+                        'item_name' => $ingredient->inventory->item_name ?? 'Unknown Item',
+                        'unit' => $ingredient->inventory->unit ?? 'unit',
+                        'qty_per_dish' => (float) $ingredient->quantity_per_dish,
+                    ];
+                })->values(),
+            ]];
+        });
+
+        return view('orders.create', compact('tables', 'menuItems', 'menuMeta'));
     }
 
     public function store(Request $request)
@@ -174,12 +190,15 @@ class OrderController extends Controller
         $deductions = [];
 
         foreach ($order->items as $item) {
-            $inventory = $this->resolveInventoryForMenuName($item->menu->name ?? '');
-            if (!$inventory) {
+            $menu = Menu::with('menuIngredients.inventory')->find($item->menu_id);
+            if (!$menu || $menu->menuIngredients->isEmpty()) {
                 continue;
             }
 
-            $deductions[$inventory->id] = ($deductions[$inventory->id] ?? 0) + (float) $item->quantity;
+            foreach ($menu->menuIngredients as $ingredient) {
+                $neededQty = (float) $ingredient->quantity_per_dish * (float) $item->quantity;
+                $deductions[$ingredient->inventory_id] = ($deductions[$ingredient->inventory_id] ?? 0) + $neededQty;
+            }
         }
 
         foreach ($deductions as $inventoryId => $qty) {
@@ -201,21 +220,23 @@ class OrderController extends Controller
         $inventoryNames = [];
 
         foreach ($items as $item) {
-            $menu = Menu::find($item['menu_id']);
+            $menu = Menu::with('menuIngredients.inventory')->find($item['menu_id']);
             if (!$menu) {
                 continue;
             }
 
-            $inventory = $this->resolveInventoryForMenuName($menu->name);
-            if (!$inventory) {
+            if ($menu->menuIngredients->isEmpty()) {
                 return [
                     false,
-                    'Inventory mapping missing for menu item "' . $menu->name . '". Please create a matching inventory item first.',
+                    'Recipe is missing for menu item "' . $menu->name . '". Add required inventory items in Menu settings first.',
                 ];
             }
 
-            $requiredByInventory[$inventory->id] = ($requiredByInventory[$inventory->id] ?? 0) + (float) $item['quantity'];
-            $inventoryNames[$inventory->id] = $inventory->item_name;
+            foreach ($menu->menuIngredients as $ingredient) {
+                $neededQty = (float) $ingredient->quantity_per_dish * (float) $item['quantity'];
+                $requiredByInventory[$ingredient->inventory_id] = ($requiredByInventory[$ingredient->inventory_id] ?? 0) + $neededQty;
+                $inventoryNames[$ingredient->inventory_id] = $ingredient->inventory->item_name ?? 'Unknown Item';
+            }
         }
 
         foreach ($requiredByInventory as $inventoryId => $requiredQty) {
@@ -233,32 +254,5 @@ class OrderController extends Controller
         }
 
         return [true, null];
-    }
-
-    private function resolveInventoryForMenuName(string $menuName): ?Inventory
-    {
-        $normalized = strtolower(trim($menuName));
-        if ($normalized === '') {
-            return null;
-        }
-
-        $exact = Inventory::query()
-            ->whereRaw('LOWER(item_name) = ?', [$normalized])
-            ->first();
-
-        if ($exact) {
-            return $exact;
-        }
-
-        $firstWord = explode(' ', $normalized)[0] ?? '';
-        if (strlen($firstWord) < 3) {
-            return null;
-        }
-
-        $matches = Inventory::query()
-            ->whereRaw('LOWER(item_name) like ?', [$firstWord . '%'])
-            ->get();
-
-        return $matches->count() === 1 ? $matches->first() : null;
     }
 }

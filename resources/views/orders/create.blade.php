@@ -48,13 +48,16 @@
                                     <div class="col-md-6 col-lg-4">
                                         <div class="border rounded-3 p-3 h-100 menu-select-card"
                                             style="cursor:pointer;transition:all .2s"
-                                            onclick="toggleItem({{ $item->id }}, '{{ addslashes($item->name) }}', {{ $item->price }}, this)">
+                                            onclick="toggleItem({{ $item->id }}, this)">
                                             <div class="d-flex justify-content-between align-items-start">
                                                 <div>
                                                     <div class="fw-semibold" style="font-size:14px">{{ $item->name }}
                                                     </div>
                                                     <div style="color:var(--text-muted);font-size:12px">
                                                         {{ Str::limit($item->description, 40) }}</div>
+                                                    <div style="font-size:11px;color:var(--text-muted)" class="mt-1">
+                                                        {{ $item->menuIngredients->count() }} ingredient(s) per dish
+                                                    </div>
                                                 </div>
                                                 <span class="badge bg-primary">৳{{ number_format($item->price, 2) }}</span>
                                             </div>
@@ -94,6 +97,12 @@
                         <div class="d-flex justify-content-between fw-bold d-none" id="totalRow">
                             <span>Total</span><span id="totalAmount">৳0.00</span>
                         </div>
+
+                        <div class="mt-3 d-none" id="inventoryNeedBox">
+                            <div class="fw-semibold mb-2" style="font-size:13px">Estimated Inventory Need</div>
+                            <div id="inventoryNeedList" style="font-size:13px;color:var(--text-muted)"></div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary w-100 mt-3" id="submitBtn" disabled>
                             <i class="fas fa-check me-2"></i>Place Order
                         </button>
@@ -117,18 +126,23 @@
 
     @push('scripts')
         <script>
+            const menuMeta = @json($menuMeta);
             let selectedItems = {};
 
-            function toggleItem(id, name, price, el) {
+            function toggleItem(id, el) {
                 if (selectedItems[id]) {
                     delete selectedItems[id];
                     el.classList.remove('selected');
                     el.querySelector('.qty-control').classList.add('d-none');
                 } else {
+                    const meta = menuMeta[id];
+                    if (!meta) return;
+
                     selectedItems[id] = {
-                        name,
-                        price,
-                        qty: 1
+                        name: meta.name,
+                        price: meta.price,
+                        qty: 1,
+                        ingredients: meta.ingredients || []
                     };
                     el.classList.add('selected');
                     el.querySelector('.qty-control').classList.remove('d-none');
@@ -150,10 +164,12 @@
                 let html = '',
                     total = 0,
                     hidden = '';
+                const inventoryNeed = {};
                 document.getElementById('emptyMsg').classList.toggle('d-none', keys.length > 0);
                 document.getElementById('totalDivider').classList.toggle('d-none', keys.length === 0);
                 document.getElementById('totalRow').classList.toggle('d-none', keys.length === 0);
                 document.getElementById('submitBtn').disabled = keys.length === 0;
+                document.getElementById('inventoryNeedBox').classList.toggle('d-none', keys.length === 0);
 
                 keys.forEach((id, i) => {
                     let item = selectedItems[id];
@@ -164,11 +180,32 @@
             <div><strong>${item.name}</strong> × ${item.qty}</div><div>৳${sub.toFixed(2)}</div></div>`;
                     hidden += `<input type="hidden" name="items[${i}][menu_id]" value="${id}">
             <input type="hidden" name="items[${i}][quantity]" value="${item.qty}">`;
+
+                    item.ingredients.forEach((ingredient) => {
+                        const needed = (parseFloat(ingredient.qty_per_dish || 0) * item.qty);
+                        if (needed <= 0) return;
+
+                        if (!inventoryNeed[ingredient.inventory_id]) {
+                            inventoryNeed[ingredient.inventory_id] = {
+                                item_name: ingredient.item_name,
+                                unit: ingredient.unit,
+                                qty: 0
+                            };
+                        }
+
+                        inventoryNeed[ingredient.inventory_id].qty += needed;
+                    });
                 });
 
                 document.getElementById('orderItems').innerHTML = html;
                 document.getElementById('totalAmount').textContent = '৳' + total.toFixed(2);
                 document.getElementById('hiddenInputs').innerHTML = hidden;
+
+                const needLines = Object.values(inventoryNeed)
+                    .map((row) => `<div>${row.item_name}: <strong>${row.qty.toFixed(2)} ${row.unit}</strong></div>`)
+                    .join('');
+                document.getElementById('inventoryNeedList').innerHTML = needLines ||
+                'No recipe configured for selected items.';
             }
         </script>
     @endpush

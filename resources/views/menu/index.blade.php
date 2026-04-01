@@ -48,6 +48,8 @@
                         <h6 class="fw-bold mb-1">{{ $item->name }}</h6>
                         <p class="text-muted mb-2" style="font-size:13px;min-height:36px">
                             {{ Str::limit($item->description, 60) }}</p>
+                        <div class="text-muted mb-2" style="font-size:12px">Recipe: {{ $item->menuIngredients->count() }}
+                            ingredient(s)</div>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="fw-bold"
                                 style="font-size:20px;color:var(--primary)">৳{{ number_format($item->price, 2) }}</span>
