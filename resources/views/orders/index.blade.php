@@ -12,6 +12,13 @@
                     </option>
                 @endforeach
             </select>
+            <select name="payment_status" class="form-select" style="width:auto" onchange="this.form.submit()">
+                <option value="">All Payments</option>
+                @foreach (['unpaid', 'partial', 'paid'] as $ps)
+                    <option value="{{ $ps }}" {{ request('payment_status') == $ps ? 'selected' : '' }}>
+                        {{ ucfirst($ps) }}</option>
+                @endforeach
+            </select>
             <input type="date" name="date" class="form-control" style="width:auto" value="{{ request('date') }}"
                 onchange="this.form.submit()">
         </form>
@@ -65,6 +72,9 @@
                                     <div class="d-flex gap-1">
                                         <a href="{{ route('orders.edit', $order) }}" class="btn btn-sm btn-outline-primary"
                                             title="Edit"><i class="fas fa-edit"></i></a>
+                                        <a href="{{ route('orders.receipt', $order) }}"
+                                            class="btn btn-sm btn-outline-secondary" title="Receipt" target="_blank"><i
+                                                class="fas fa-print"></i></a>
                                         <form action="{{ route('orders.destroy', $order) }}" method="POST"
                                             onsubmit="return confirm('Delete this order?')">
                                             @csrf @method('DELETE')

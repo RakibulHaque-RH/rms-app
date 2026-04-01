@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('orders', OrderController::class);
     Route::patch('/orders/{order}/payment', [OrderController::class, 'recordPayment'])->name('orders.payment');
+    Route::get('/orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
     Route::resource('menu', MenuController::class);
 
     // Kitchen Display

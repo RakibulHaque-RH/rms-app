@@ -16,6 +16,9 @@ class OrderController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+        if ($request->filled('payment_status')) {
+            $query->where('payment_status', $request->payment_status);
+        }
         if ($request->filled('date')) {
             $query->whereDate('created_at', $request->date);
         }
@@ -134,5 +137,11 @@ class OrderController extends Controller
         ]);
 
         return redirect()->route('orders.edit', $order)->with('success', 'Payment recorded successfully.');
+    }
+
+    public function receipt(Order $order)
+    {
+        $order->load(['table', 'user', 'items.menu']);
+        return view('orders.receipt', compact('order'));
     }
 }

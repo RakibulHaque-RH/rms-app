@@ -151,6 +151,11 @@
                             Payment</button>
                     </form>
 
+                    <a href="{{ route('orders.receipt', $order) }}" class="btn btn-outline-secondary w-100 mt-2"
+                        target="_blank">
+                        <i class="fas fa-print me-2"></i>Print Receipt
+                    </a>
+
                     <hr>
                     <div style="font-size:13px;color:var(--text-muted)">
                         <div class="mb-1"><i class="fas fa-clock me-1"></i>Created:
