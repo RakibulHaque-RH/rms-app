@@ -190,5 +190,7 @@ class DatabaseSeeder extends Seeder
         foreach ($inventoryItems as $item) {
             Inventory::create($item);
         }
+
+        $this->call(MenuRecipeSeeder::class);
     }
 }
