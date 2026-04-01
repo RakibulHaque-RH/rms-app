@@ -208,7 +208,10 @@ class OrderController extends Controller
 
             $inventory = $this->resolveInventoryForMenuName($menu->name);
             if (!$inventory) {
-                continue;
+                return [
+                    false,
+                    'Inventory mapping missing for menu item "' . $menu->name . '". Please create a matching inventory item first.',
+                ];
             }
 
             $requiredByInventory[$inventory->id] = ($requiredByInventory[$inventory->id] ?? 0) + (float) $item['quantity'];
