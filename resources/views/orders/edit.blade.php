@@ -109,6 +109,11 @@
 
                     <hr>
 
+                    @php
+                        $alreadyPaid = (float) ($order->paid_amount ?? 0);
+                        $dueAmount = max((float) $order->total_amount - $alreadyPaid, 0);
+                    @endphp
+
                     <form action="{{ route('orders.payment', $order) }}" method="POST">
                         @csrf
                         @method('PATCH')
@@ -125,12 +130,14 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Paid Amount</label>
+                            <label class="form-label fw-semibold">Payment Amount</label>
                             <input type="number" name="paid_amount" step="0.01" min="0.01"
-                                max="{{ $order->total_amount }}" class="form-control"
-                                value="{{ old('paid_amount', $order->payment_status === 'unpaid' ? $order->total_amount : $order->paid_amount) }}"
-                                required>
-                            <small class="text-muted">Order total: ৳{{ number_format($order->total_amount, 2) }}</small>
+                                max="{{ $dueAmount }}" class="form-control"
+                                value="{{ old('paid_amount', $dueAmount > 0 ? $dueAmount : 0) }}" required>
+                            <small class="text-muted d-block">Order total:
+                                ৳{{ number_format($order->total_amount, 2) }}</small>
+                            <small class="text-muted d-block">Already paid: ৳{{ number_format($alreadyPaid, 2) }}</small>
+                            <small class="text-muted d-block">Due now: ৳{{ number_format($dueAmount, 2) }}</small>
                         </div>
 
                         <div class="mb-3">
@@ -147,8 +154,9 @@
                             </div>
                         @endif
 
-                        <button type="submit" class="btn btn-success w-100"><i class="fas fa-credit-card me-2"></i>Record
-                            Payment</button>
+                        <button type="submit" class="btn btn-success w-100" {{ $dueAmount <= 0 ? 'disabled' : '' }}>
+                            <i class="fas fa-credit-card me-2"></i>{{ $dueAmount <= 0 ? 'Fully Paid' : 'Record Payment' }}
+                        </button>
                     </form>
 
                     <a href="{{ route('orders.receipt', $order) }}" class="btn btn-outline-secondary w-100 mt-2"

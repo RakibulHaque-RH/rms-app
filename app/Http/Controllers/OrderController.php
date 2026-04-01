@@ -150,9 +150,17 @@ class OrderController extends Controller
 
     public function recordPayment(Request $request, Order $order)
     {
+        $currentPaid = (float) ($order->paid_amount ?? 0);
+        $totalAmount = (float) $order->total_amount;
+        $remainingDue = max($totalAmount - $currentPaid, 0);
+
+        if ($remainingDue <= 0) {
+            return redirect()->route('orders.edit', $order)->with('success', 'This order is already fully paid.');
+        }
+
         $request->validate([
             'payment_method' => 'required|in:cash,bkash,rocket,card',
-            'paid_amount' => 'required|numeric|min:0.01|max:' . $order->total_amount,
+            'paid_amount' => 'required|numeric|min:0.01|max:' . $remainingDue,
             'payment_reference' => 'nullable|string|max:100',
         ]);
 
@@ -162,13 +170,14 @@ class OrderController extends Controller
             ]);
         }
 
-        $paidAmount = (float) $request->paid_amount;
-        $paymentStatus = $paidAmount >= (float) $order->total_amount ? 'paid' : 'partial';
+        $paymentAmount = (float) $request->paid_amount;
+        $newPaidAmount = min($currentPaid + $paymentAmount, $totalAmount);
+        $paymentStatus = $newPaidAmount >= $totalAmount ? 'paid' : 'partial';
 
         $order->update([
             'payment_method' => $request->payment_method,
             'payment_reference' => $request->payment_reference,
-            'paid_amount' => $paidAmount,
+            'paid_amount' => $newPaidAmount,
             'payment_status' => $paymentStatus,
             'paid_at' => now(),
         ]);
