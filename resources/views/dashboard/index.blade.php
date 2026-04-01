@@ -3,11 +3,15 @@
 @section('subtitle', 'Welcome back! Here\'s what\'s happening today.')
 
 @section('content')
+    <div class="d-flex justify-content-end mb-2">
+        <small class="text-muted">Auto-refresh: every 15 seconds</small>
+    </div>
+
     <!-- Stats Row -->
     <div class="row g-4 mb-4">
         <div class="col-xl-3 col-sm-6 fade-in">
             <div class="stat-card primary">
-                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="stat-icon"><i class="fas fa-money-bill-wave text-success"></i></div>
                 <div class="stat-value">৳{{ number_format($todayRevenue, 2) }}</div>
                 <div class="stat-label">Today's Revenue</div>
             </div>
@@ -189,4 +193,12 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            setInterval(() => {
+                window.location.reload();
+            }, 15000);
+        </script>
+    @endpush
 @endsection

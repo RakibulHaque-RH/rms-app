@@ -3,6 +3,10 @@
 @section('subtitle', 'Sales analytics and performance metrics')
 
 @section('content')
+    <div class="d-flex justify-content-end mb-2">
+        <small class="text-muted">Auto-refresh: every 15 seconds</small>
+    </div>
+
     <!-- Date Range Filter -->
     <div class="card mb-4 fade-in">
         <div class="card-body py-3">
@@ -25,7 +29,7 @@
     <div class="row g-4 mb-4">
         <div class="col-xl-3 col-sm-6 fade-in">
             <div class="stat-card primary">
-                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="stat-icon"><i class="fas fa-money-bill-wave text-success"></i></div>
                 <div class="stat-value">৳{{ number_format($totalRevenue, 2) }}</div>
                 <div class="stat-label">Total Revenue</div>
             </div>
@@ -214,6 +218,11 @@
                     cutout: '65%'
                 }
             });
+
+            setInterval(() => {
+                const url = new URL(window.location.href);
+                window.location.href = url.toString();
+            }, 15000);
         </script>
     @endpush
 @endsection
