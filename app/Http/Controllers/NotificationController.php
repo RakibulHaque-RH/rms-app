@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inventory;
 use App\Models\Order;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class NotificationController extends Controller
 {
@@ -35,14 +36,24 @@ class NotificationController extends Controller
             ]);
         }
 
-        $unpaidOrders = Order::whereIn('payment_status', ['unpaid', 'partial'])->count();
-        if ($unpaidOrders > 0) {
+        if (Schema::hasColumn('orders', 'payment_status')) {
+            $unpaidOrders = Order::whereIn('payment_status', ['unpaid', 'partial'])->count();
+            if ($unpaidOrders > 0) {
+                $notifications->push([
+                    'type' => 'danger',
+                    'title' => 'Outstanding Payments',
+                    'message' => $unpaidOrders . ' orders still need full payment.',
+                    'link' => route('orders.index', ['payment_status' => 'unpaid']),
+                    'link_text' => 'Check Payments',
+                ]);
+            }
+        } else {
             $notifications->push([
-                'type' => 'danger',
-                'title' => 'Outstanding Payments',
-                'message' => $unpaidOrders . ' orders still need full payment.',
-                'link' => route('orders.index', ['payment_status' => 'unpaid']),
-                'link_text' => 'Check Payments',
+                'type' => 'warning',
+                'title' => 'Payment Module Not Ready',
+                'message' => 'Run migrations to enable payment-based notifications.',
+                'link' => route('dashboard'),
+                'link_text' => 'Go to Dashboard',
             ]);
         }
 
