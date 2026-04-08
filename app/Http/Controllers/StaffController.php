@@ -28,22 +28,22 @@ class StaffController extends Controller
         return redirect()->route('staff.index')->with('success', 'Staff member added!');
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $staff)
     {
         $request->validate([
-            'name' => 'required|string|max:255', 'email' => 'required|email|unique:users,email,' . $user->id,
+            'name' => 'required|string|max:255', 'email' => 'required|email|unique:users,email,' . $staff->id,
             'role' => 'required|in:manager,waiter,chef,cashier',
         ]);
         $data = $request->only('name', 'email', 'role', 'phone');
         $data['is_active'] = $request->has('is_active');
         if ($request->filled('password')) { $data['password'] = Hash::make($request->password); }
-        $user->update($data);
+        $staff->update($data);
         return redirect()->route('staff.index')->with('success', 'Staff member updated!');
     }
 
-    public function destroy(User $user)
+    public function destroy(User $staff)
     {
-        $user->delete();
+        $staff->delete();
         return redirect()->route('staff.index')->with('success', 'Staff member removed!');
     }
 }
