@@ -23,6 +23,7 @@ Laravel is accessible, powerful, and provides tools required for large, robust a
 
 ## Project Documentation
 
+- [Full Project Documentation](docs/README.md)
 - [Payment Gateway Documentation](docs/payment-gateway.md)
 
 ## Learning Laravel
