@@ -34,10 +34,18 @@ class DashboardController extends Controller
         $pendingOrders = Order::whereIn('status', ['pending', 'preparing'])->with(['table', 'user'])->latest()->get();
 
         return view('dashboard.index', compact(
-            'todayOrders', 'todayRevenue', 'totalRevenue',
-            'availableTables', 'totalTables', 'occupiedTables',
-            'totalMenuItems', 'lowStockItems', 'totalStaff',
-            'mostPopularDish', 'recentOrders', 'pendingOrders'
+            'todayOrders',
+            'todayRevenue',
+            'totalRevenue',
+            'availableTables',
+            'totalTables',
+            'occupiedTables',
+            'totalMenuItems',
+            'lowStockItems',
+            'totalStaff',
+            'mostPopularDish',
+            'recentOrders',
+            'pendingOrders'
         ));
     }
 }

@@ -22,7 +22,7 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Table *</label>
+                                <label class="form-label fw-semibold">Table *</label>=
                                 <select name="table_id" class="form-select" required>
                                     <option value="">Select a table</option>
                                     @foreach ($tables as $table)
@@ -222,7 +222,7 @@
                     .map((row) => `<div>${row.item_name}: <strong>${row.qty.toFixed(2)} ${row.unit}</strong></div>`)
                     .join('');
                 document.getElementById('inventoryNeedList').innerHTML = needLines ||
-                'No recipe configured for selected items.';
+                    'No recipe configured for selected items.';
             }
         </script>
     @endpush

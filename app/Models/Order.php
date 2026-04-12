@@ -43,6 +43,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function paymentTransactions()
+    {
+        return $this->hasMany(PaymentTransaction::class);
+    }
+
     public function calculateTotal()
     {
         $this->total_amount = $this->items->sum('subtotal');

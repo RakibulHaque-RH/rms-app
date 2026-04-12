@@ -17,13 +17,18 @@ class StaffController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255', 'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:8', 'role' => 'required|in:manager,waiter,chef,cashier',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:manager,waiter,chef,cashier',
         ]);
         User::create([
-            'name' => $request->name, 'email' => $request->email,
-            'password' => Hash::make($request->password), 'role' => $request->role,
-            'phone' => $request->phone, 'is_active' => true,
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'phone' => $request->phone,
+            'is_active' => true,
         ]);
         return redirect()->route('staff.index')->with('success', 'Staff member added!');
     }
@@ -31,12 +36,15 @@ class StaffController extends Controller
     public function update(Request $request, User $staff)
     {
         $request->validate([
-            'name' => 'required|string|max:255', 'email' => 'required|email|unique:users,email,' . $staff->id,
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $staff->id,
             'role' => 'required|in:manager,waiter,chef,cashier',
         ]);
         $data = $request->only('name', 'email', 'role', 'phone');
         $data['is_active'] = $request->has('is_active');
-        if ($request->filled('password')) { $data['password'] = Hash::make($request->password); }
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
         $staff->update($data);
         return redirect()->route('staff.index')->with('success', 'Staff member updated!');
     }

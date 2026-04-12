@@ -40,8 +40,16 @@ class ReportController extends Controller
             ->groupBy('menus.category')->orderByDesc('total_revenue')->get();
 
         return view('reports.index', compact(
-            'startDate', 'endDate', 'totalRevenue', 'totalOrders',
-            'completedOrders', 'cancelledOrders', 'dailyRevenue', 'topItems', 'categoryRevenue', 'mostPopularDish'
+            'startDate',
+            'endDate',
+            'totalRevenue',
+            'totalOrders',
+            'completedOrders',
+            'cancelledOrders',
+            'dailyRevenue',
+            'topItems',
+            'categoryRevenue',
+            'mostPopularDish'
         ));
     }
 }

@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
     Route::resource('orders', OrderController::class);
     Route::patch('/orders/{order}/payment', [OrderController::class, 'recordPayment'])->name('orders.payment');
+    Route::post('/orders/{order}/payment/online', [OrderController::class, 'startOnlinePayment'])->name('orders.payment.online');
     Route::get('/orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
     Route::resource('menu', MenuController::class);
 
@@ -42,3 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     });
 });
+
+Route::match(['get', 'post'], '/payments/sslcommerz/success', [OrderController::class, 'sslCommerzSuccess'])->name('payments.sslcommerz.success');
+Route::match(['get', 'post'], '/payments/sslcommerz/fail', [OrderController::class, 'sslCommerzFail'])->name('payments.sslcommerz.fail');
+Route::match(['get', 'post'], '/payments/sslcommerz/cancel', [OrderController::class, 'sslCommerzCancel'])->name('payments.sslcommerz.cancel');
+Route::post('/payments/sslcommerz/ipn', [OrderController::class, 'sslCommerzIpn'])->name('payments.sslcommerz.ipn');

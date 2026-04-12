@@ -7,7 +7,10 @@ use App\Models\OrderItem;
 use App\Models\Menu;
 use App\Models\Table;
 use App\Models\Inventory;
+use App\Models\PaymentTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -185,6 +188,251 @@ class OrderController extends Controller
         return redirect()->route('orders.edit', $order)->with('success', 'Payment recorded successfully.');
     }
 
+    public function startOnlinePayment(Order $order)
+    {
+        $currentPaid = (float) ($order->paid_amount ?? 0);
+        $totalAmount = (float) $order->total_amount;
+        $remainingDue = max($totalAmount - $currentPaid, 0);
+
+        if ($remainingDue <= 0) {
+            return redirect()->route('orders.edit', $order)->with('success', 'This order is already fully paid.');
+        }
+
+        $storeId = config('services.sslcommerz.store_id');
+        $storePassword = config('services.sslcommerz.store_password');
+        $baseUrl = rtrim((string) config('services.sslcommerz.base_url'), '/');
+
+        if (blank($storeId) || blank($storePassword) || blank($baseUrl)) {
+            return redirect()->route('orders.edit', $order)->withErrors([
+                'payment_gateway' => 'SSLCommerz is not configured. Add store credentials in .env first.',
+            ]);
+        }
+
+        $tranId = 'RMS-' . $order->id . '-' . now()->format('YmdHis') . '-' . random_int(100, 999);
+
+        $transaction = PaymentTransaction::create([
+            'order_id' => $order->id,
+            'gateway' => 'sslcommerz',
+            'transaction_id' => $tranId,
+            'amount' => $remainingDue,
+            'status' => 'initiated',
+        ]);
+
+        $payload = [
+            'store_id' => $storeId,
+            'store_passwd' => $storePassword,
+            'total_amount' => number_format($remainingDue, 2, '.', ''),
+            'currency' => 'BDT',
+            'tran_id' => $tranId,
+            'success_url' => route('payments.sslcommerz.success'),
+            'fail_url' => route('payments.sslcommerz.fail'),
+            'cancel_url' => route('payments.sslcommerz.cancel'),
+            'ipn_url' => route('payments.sslcommerz.ipn'),
+            'shipping_method' => 'NO',
+            'product_name' => 'Order ' . $order->order_number,
+            'product_category' => 'Restaurant',
+            'product_profile' => 'general',
+            'cus_name' => $order->user->name ?? 'Guest',
+            'cus_email' => $order->user->email ?? 'guest@example.com',
+            'cus_add1' => 'Restaurant POS',
+            'cus_city' => 'Dhaka',
+            'cus_postcode' => '1200',
+            'cus_country' => 'Bangladesh',
+            'cus_phone' => $order->user->phone ?? '01700000000',
+            'value_a' => (string) $order->id,
+            'value_b' => (string) auth()->id(),
+            'value_c' => $order->order_number,
+        ];
+
+        try {
+            $response = Http::asForm()->timeout(30)->post($baseUrl . '/gwprocess/v4/api.php', $payload);
+            $result = $response->json();
+
+            $transaction->update(['gateway_response' => $result]);
+
+            if ($response->failed() || blank($result['GatewayPageURL'] ?? null)) {
+                $transaction->update(['status' => 'failed']);
+                Log::warning('SSLCommerz initiate failed', ['order_id' => $order->id, 'response' => $result]);
+
+                return redirect()->route('orders.edit', $order)->withErrors([
+                    'payment_gateway' => 'Unable to start online payment now. Please try again.',
+                ]);
+            }
+
+            return redirect()->away($result['GatewayPageURL']);
+        } catch (\Throwable $e) {
+            $transaction->update(['status' => 'failed']);
+            Log::error('SSLCommerz initiate exception', ['order_id' => $order->id, 'error' => $e->getMessage()]);
+
+            return redirect()->route('orders.edit', $order)->withErrors([
+                'payment_gateway' => 'Payment gateway connection failed. Please try again.',
+            ]);
+        }
+    }
+
+    public function sslCommerzSuccess(Request $request)
+    {
+        $tranId = (string) $request->input('tran_id');
+        $transaction = PaymentTransaction::where('transaction_id', $tranId)->first();
+        $order = $transaction?->order;
+
+        if (!$order && $request->filled('value_a')) {
+            $order = Order::find($request->input('value_a'));
+        }
+
+        if (!$order) {
+            return redirect()->route('orders.index')->withErrors(['payment_gateway' => 'Payment order not found.']);
+        }
+
+        if (!$transaction) {
+            $transaction = PaymentTransaction::create([
+                'order_id' => $order->id,
+                'gateway' => 'sslcommerz',
+                'transaction_id' => $tranId,
+                'amount' => (float) $request->input('amount', 0),
+                'status' => 'pending',
+            ]);
+        }
+
+        $validated = $this->verifySslCommerzPayment((string) $request->input('val_id'));
+        $validatedStatus = strtoupper((string) ($validated['status'] ?? ''));
+        $isValid = in_array($validatedStatus, ['VALID', 'VALIDATED']);
+
+        if (!$isValid) {
+            $transaction->update([
+                'status' => 'failed',
+                'gateway_response' => ['callback' => $request->all(), 'validation' => $validated],
+            ]);
+
+            return redirect()->route('orders.edit', $order)->withErrors([
+                'payment_gateway' => 'Gateway verification failed. Payment was not recorded.',
+            ]);
+        }
+
+        $paidAmount = (float) ($validated['amount'] ?? $validated['store_amount'] ?? $transaction->amount);
+        $paymentMethod = $this->resolvePaymentMethodFromCardType((string) ($validated['card_type'] ?? ''));
+
+        $currentPaid = (float) ($order->paid_amount ?? 0);
+        $totalAmount = (float) $order->total_amount;
+        $newPaidAmount = min($currentPaid + $paidAmount, $totalAmount);
+        $paymentStatus = $newPaidAmount >= $totalAmount ? 'paid' : 'partial';
+
+        $order->update([
+            'payment_method' => $paymentMethod,
+            'payment_reference' => $tranId,
+            'paid_amount' => $newPaidAmount,
+            'payment_status' => $paymentStatus,
+            'paid_at' => now(),
+        ]);
+
+        $transaction->update([
+            'amount' => $paidAmount,
+            'status' => 'success',
+            'payment_method' => $paymentMethod,
+            'gateway_response' => ['callback' => $request->all(), 'validation' => $validated],
+            'paid_at' => now(),
+        ]);
+
+        return redirect()->route('orders.edit', $order)->with('success', 'Online payment completed successfully.');
+    }
+
+    public function sslCommerzFail(Request $request)
+    {
+        $tranId = (string) $request->input('tran_id');
+        $transaction = PaymentTransaction::where('transaction_id', $tranId)->first();
+        $order = $transaction?->order;
+
+        if ($transaction) {
+            $transaction->update([
+                'status' => 'failed',
+                'gateway_response' => ['callback' => $request->all()],
+            ]);
+        }
+
+        if ($order) {
+            return redirect()->route('orders.edit', $order)->withErrors([
+                'payment_gateway' => 'Online payment failed. Please try again.',
+            ]);
+        }
+
+        return redirect()->route('orders.index')->withErrors(['payment_gateway' => 'Online payment failed.']);
+    }
+
+    public function sslCommerzCancel(Request $request)
+    {
+        $tranId = (string) $request->input('tran_id');
+        $transaction = PaymentTransaction::where('transaction_id', $tranId)->first();
+        $order = $transaction?->order;
+
+        if ($transaction) {
+            $transaction->update([
+                'status' => 'cancelled',
+                'gateway_response' => ['callback' => $request->all()],
+            ]);
+        }
+
+        if ($order) {
+            return redirect()->route('orders.edit', $order)->withErrors([
+                'payment_gateway' => 'Payment cancelled by customer.',
+            ]);
+        }
+
+        return redirect()->route('orders.index')->withErrors(['payment_gateway' => 'Payment cancelled.']);
+    }
+
+    public function sslCommerzIpn(Request $request)
+    {
+        $tranId = (string) $request->input('tran_id');
+        $transaction = PaymentTransaction::where('transaction_id', $tranId)->first();
+
+        if (!$transaction) {
+            return response('Transaction not found', 404);
+        }
+
+        if ($transaction->status === 'success') {
+            return response('OK', 200);
+        }
+
+        $validated = $this->verifySslCommerzPayment((string) $request->input('val_id'));
+        $validatedStatus = strtoupper((string) ($validated['status'] ?? ''));
+
+        if (!in_array($validatedStatus, ['VALID', 'VALIDATED'])) {
+            $transaction->update([
+                'status' => 'failed',
+                'gateway_response' => ['ipn' => $request->all(), 'validation' => $validated],
+            ]);
+
+            return response('INVALID', 400);
+        }
+
+        $order = $transaction->order;
+        $paidAmount = (float) ($validated['amount'] ?? $validated['store_amount'] ?? $transaction->amount);
+        $paymentMethod = $this->resolvePaymentMethodFromCardType((string) ($validated['card_type'] ?? ''));
+
+        $currentPaid = (float) ($order->paid_amount ?? 0);
+        $totalAmount = (float) $order->total_amount;
+        $newPaidAmount = min($currentPaid + $paidAmount, $totalAmount);
+        $paymentStatus = $newPaidAmount >= $totalAmount ? 'paid' : 'partial';
+
+        $order->update([
+            'payment_method' => $paymentMethod,
+            'payment_reference' => $tranId,
+            'paid_amount' => $newPaidAmount,
+            'payment_status' => $paymentStatus,
+            'paid_at' => now(),
+        ]);
+
+        $transaction->update([
+            'amount' => $paidAmount,
+            'status' => 'success',
+            'payment_method' => $paymentMethod,
+            'gateway_response' => ['ipn' => $request->all(), 'validation' => $validated],
+            'paid_at' => now(),
+        ]);
+
+        return response('OK', 200);
+    }
+
     public function receipt(Order $order)
     {
         $order->load(['table', 'user', 'items.menu']);
@@ -264,5 +512,50 @@ class OrderController extends Controller
         }
 
         return [true, null];
+    }
+
+    private function verifySslCommerzPayment(string $valId): array
+    {
+        if (blank($valId)) {
+            return [];
+        }
+
+        $storeId = config('services.sslcommerz.store_id');
+        $storePassword = config('services.sslcommerz.store_password');
+        $baseUrl = rtrim((string) config('services.sslcommerz.base_url'), '/');
+
+        try {
+            $response = Http::timeout(30)->get($baseUrl . '/validator/api/validationserverAPI.php', [
+                'val_id' => $valId,
+                'store_id' => $storeId,
+                'store_passwd' => $storePassword,
+                'v' => 1,
+                'format' => 'json',
+            ]);
+
+            if ($response->failed()) {
+                return [];
+            }
+
+            return $response->json() ?? [];
+        } catch (\Throwable $e) {
+            Log::error('SSLCommerz verify exception', ['val_id' => $valId, 'error' => $e->getMessage()]);
+            return [];
+        }
+    }
+
+    private function resolvePaymentMethodFromCardType(string $cardType): string
+    {
+        $normalized = strtolower($cardType);
+
+        if (str_contains($normalized, 'bkash')) {
+            return 'bkash';
+        }
+
+        if (str_contains($normalized, 'rocket')) {
+            return 'rocket';
+        }
+
+        return 'card';
     }
 }

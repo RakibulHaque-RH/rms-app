@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>3-Month Internship Log Book</title>
+<style>
+body { font-family: "Times New Roman", serif; font-size: 12pt; margin: 28px; }
+h1 { font-size: 18pt; text-align: center; margin-bottom: 14px; }
+h2 { font-size: 13pt; margin-top: 22px; }
+p { margin: 6px 0; }
+.table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.table th, .table td { border: 1px solid #000; padding: 6px; vertical-align: top; }
+.table th { text-align: center; }
+.small { font-size: 10.5pt; }
+.spacer { height: 14px; }
+</style>
+</head>
+<body>
+<h1>3-Month Internship Log Book</h1>
+
+<p><b>Student Name:</b> ____________________________</p>
+<p><b>ID:</b> ____________________________</p>
+<p><b>Company Name:</b> ____________________________</p>
+<p><b>Department:</b> ____________________________</p>
+<p><b>Internship Duration:</b> ____________________________ to ____________________________</p>
+<p><b>Office Days:</b> Saturday to Thursday (Friday Off)</p>
+
+<h2>Daily Evaluation Format</h2>
+<p><b>Date:</b> ____________________________</p>
+<table class="table">
+<tr>
+<th width="65%">ACTIVITIES (Left Side)</th>
+<th width="35%">NEW SKILL LEARNED (Right Side)</th>
+</tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+</table>
+<p><b>Company Supervisor Name and Signature with Comments:</b> ____________________________</p>
+
+<h2>3-Month Log Entries (Saturday-Thursday)</h2>
+<table class="table small">
+<tr>
+<th width="17%">Week-Day</th>
+<th width="48%">ACTIVITIES (Left Side)</th>
+<th width="35%">NEW SKILL LEARNED (Right Side)</th>
+</tr>
+<tr><td>Week 1 - Saturday</td><td>Internship onboarding, office orientation, project introduction</td><td>Professional communication, office workflow understanding</td></tr>
+<tr><td>Week 1 - Sunday</td><td>Installed project and configured local setup</td><td>Laravel environment setup, Composer and npm usage</td></tr>
+<tr><td>Week 1 - Monday</td><td>Reviewed project folders, routes, controllers, and models</td><td>MVC architecture understanding</td></tr>
+<tr><td>Week 1 - Tuesday</td><td>Studied database tables and migrations</td><td>Database schema interpretation</td></tr>
+<tr><td>Week 1 - Wednesday</td><td>Ran application and validated major modules</td><td>Debugging basics and runtime checks</td></tr>
+<tr><td>Week 1 - Thursday</td><td>Prepared daily summary and discussed with mentor</td><td>Reporting and technical writing</td></tr>
+<tr><td>Week 2 - Saturday</td><td>Analyzed authentication workflow</td><td>Session authentication concepts</td></tr>
+<tr><td>Week 2 - Sunday</td><td>Reviewed login and logout behavior</td><td>Input validation handling</td></tr>
+<tr><td>Week 2 - Monday</td><td>Checked role-based access middleware</td><td>Authorization by role</td></tr>
+<tr><td>Week 2 - Tuesday</td><td>Documented authentication requirements</td><td>Requirement documentation</td></tr>
+<tr><td>Week 2 - Wednesday</td><td>Tested invalid credential and inactive-user cases</td><td>Error flow testing</td></tr>
+<tr><td>Week 2 - Thursday</td><td>Shared weekly update with supervisor</td><td>Feedback integration</td></tr>
+<tr><td>Week 3 - Saturday</td><td>Reviewed order creation process</td><td>Business workflow mapping</td></tr>
+<tr><td>Week 3 - Sunday</td><td>Checked order item subtotal and total calculations</td><td>Transaction data consistency</td></tr>
+<tr><td>Week 3 - Monday</td><td>Tested order status transitions</td><td>State transition validation</td></tr>
+<tr><td>Week 3 - Tuesday</td><td>Verified table occupancy changes from order actions</td><td>Event-driven data update logic</td></tr>
+<tr><td>Week 3 - Wednesday</td><td>Reviewed receipt generation process</td><td>Output formatting</td></tr>
+<tr><td>Week 3 - Thursday</td><td>Updated order module notes</td><td>Structured module documentation</td></tr>
+<tr><td>Week 4 - Saturday</td><td>Reviewed kitchen queue module</td><td>Queue processing concepts</td></tr>
+<tr><td>Week 4 - Sunday</td><td>Tested pending, preparing, ready status update flow</td><td>Process state management</td></tr>
+<tr><td>Week 4 - Monday</td><td>Checked kitchen-to-order synchronization</td><td>Cross-module consistency</td></tr>
+<tr><td>Week 4 - Tuesday</td><td>Improved status label clarity in notes</td><td>Domain language standardization</td></tr>
+<tr><td>Week 4 - Wednesday</td><td>Performed scenario tests for kitchen operations</td><td>Scenario-based testing</td></tr>
+<tr><td>Week 4 - Thursday</td><td>Weekly summary submission</td><td>Professional reporting discipline</td></tr>
+<tr><td>Week 5 - Saturday</td><td>Reviewed inventory CRUD workflow</td><td>Resource lifecycle management</td></tr>
+<tr><td>Week 5 - Sunday</td><td>Tested low-stock filtering</td><td>Conditional query logic</td></tr>
+<tr><td>Week 5 - Monday</td><td>Reviewed menu and ingredient mapping</td><td>Many-to-many relationship design</td></tr>
+<tr><td>Week 5 - Tuesday</td><td>Verified stock checks before order placement</td><td>Pre-condition enforcement</td></tr>
+<tr><td>Week 5 - Wednesday</td><td>Tested inventory deduction on served/completed orders</td><td>Inventory deduction logic</td></tr>
+<tr><td>Week 5 - Thursday</td><td>Documented inventory business rules</td><td>Rule documentation skills</td></tr>
+<tr><td>Week 6 - Saturday</td><td>Reviewed table management and statuses</td><td>Status model design</td></tr>
+<tr><td>Week 6 - Sunday</td><td>Tested manual table status update</td><td>Controlled update workflow</td></tr>
+<tr><td>Week 6 - Monday</td><td>Verified table release when active orders complete</td><td>Data integrity validation</td></tr>
+<tr><td>Week 6 - Tuesday</td><td>Found and documented table edge cases</td><td>Edge-case analysis</td></tr>
+<tr><td>Week 6 - Wednesday</td><td>Prepared acceptance checklist for table module</td><td>Acceptance criteria drafting</td></tr>
+<tr><td>Week 6 - Thursday</td><td>Weekly review and corrections</td><td>Quality improvement cycle</td></tr>
+<tr><td>Week 7 - Saturday</td><td>Reviewed staff management module</td><td>User administration workflow</td></tr>
+<tr><td>Week 7 - Sunday</td><td>Checked active and inactive staff behavior</td><td>Account lifecycle understanding</td></tr>
+<tr><td>Week 7 - Monday</td><td>Tested password hashing and updates</td><td>Security implementation basics</td></tr>
+<tr><td>Week 7 - Tuesday</td><td>Validated staff form input checks</td><td>Form validation consistency</td></tr>
+<tr><td>Week 7 - Wednesday</td><td>Updated staff module checklist with mentor</td><td>QA checklist tracking</td></tr>
+<tr><td>Week 7 - Thursday</td><td>Submitted weekly report</td><td>Technical communication</td></tr>
+<tr><td>Week 8 - Saturday</td><td>Reviewed payment module for offline methods</td><td>Payment status lifecycle</td></tr>
+<tr><td>Week 8 - Sunday</td><td>Tested partial and full payment updates</td><td>Payment derivation logic</td></tr>
+<tr><td>Week 8 - Monday</td><td>Verified payment reference requirement</td><td>Data validation for payment methods</td></tr>
+<tr><td>Week 8 - Tuesday</td><td>Tested overpayment prevention</td><td>Financial data safety checks</td></tr>
+<tr><td>Week 8 - Wednesday</td><td>Documented payment flow behavior</td><td>Finance module documentation</td></tr>
+<tr><td>Week 8 - Thursday</td><td>Weekly mentor feedback review</td><td>Iterative improvement</td></tr>
+<tr><td>Week 9 - Saturday</td><td>Reviewed SSLCommerz integration flow</td><td>Third-party API integration</td></tr>
+<tr><td>Week 9 - Sunday</td><td>Tested success, fail, cancel callbacks</td><td>Callback lifecycle handling</td></tr>
+<tr><td>Week 9 - Monday</td><td>Checked IPN verification and transaction log</td><td>Idempotency and audit trail</td></tr>
+<tr><td>Week 9 - Tuesday</td><td>Verified gateway response mapping to order updates</td><td>Integration mapping</td></tr>
+<tr><td>Week 9 - Wednesday</td><td>Reviewed exception handling for payment failures</td><td>Resilient error handling</td></tr>
+<tr><td>Week 9 - Thursday</td><td>Weekly summary and action planning</td><td>Sprint-like planning</td></tr>
+<tr><td>Week 10 - Saturday</td><td>Reviewed dashboard metrics calculations</td><td>KPI interpretation</td></tr>
+<tr><td>Week 10 - Sunday</td><td>Tested reporting date-range filters</td><td>Query filter validation</td></tr>
+<tr><td>Week 10 - Monday</td><td>Verified revenue and top-item reports</td><td>Aggregation testing</td></tr>
+<tr><td>Week 10 - Tuesday</td><td>Checked category-wise revenue output</td><td>Grouped analytics understanding</td></tr>
+<tr><td>Week 10 - Wednesday</td><td>Updated reporting requirement notes</td><td>Requirement refinement</td></tr>
+<tr><td>Week 10 - Thursday</td><td>Supervisor review and improvements</td><td>Review response handling</td></tr>
+<tr><td>Week 11 - Saturday</td><td>Reviewed notification rules</td><td>Rule-based alert generation</td></tr>
+<tr><td>Week 11 - Sunday</td><td>Tested pending/ready/unpaid notifications</td><td>Conditional alert logic</td></tr>
+<tr><td>Week 11 - Monday</td><td>Verified low-stock alerts for manager/admin</td><td>Role-scoped notifications</td></tr>
+<tr><td>Week 11 - Tuesday</td><td>Reviewed user settings update behavior</td><td>Profile management flow</td></tr>
+<tr><td>Week 11 - Wednesday</td><td>Tested current password check during password change</td><td>Secure update process</td></tr>
+<tr><td>Week 11 - Thursday</td><td>Prepared weekly completion report</td><td>Final-phase reporting</td></tr>
+<tr><td>Week 12 - Saturday</td><td>Consolidated PRD with implemented modules</td><td>End-to-end traceability</td></tr>
+<tr><td>Week 12 - Sunday</td><td>Refined use case diagram organization</td><td>UML structuring</td></tr>
+<tr><td>Week 12 - Monday</td><td>Added include and extend relationships in use case</td><td>Relationship modeling in UML</td></tr>
+<tr><td>Week 12 - Tuesday</td><td>Performed full-system walkthrough and validation</td><td>Integrated system testing</td></tr>
+<tr><td>Week 12 - Wednesday</td><td>Prepared final internship report draft</td><td>Final documentation preparation</td></tr>
+<tr><td>Week 12 - Thursday</td><td>Final presentation and project handover</td><td>Professional delivery and closure</td></tr>
+</table>
+
+<h2>Weekly Supervisor Signature</h2>
+<p>Week 1 Signature: ____________________________</p>
+<p>Week 2 Signature: ____________________________</p>
+<p>Week 3 Signature: ____________________________</p>
+<p>Week 4 Signature: ____________________________</p>
+<p>Week 5 Signature: ____________________________</p>
+<p>Week 6 Signature: ____________________________</p>
+<p>Week 7 Signature: ____________________________</p>
+<p>Week 8 Signature: ____________________________</p>
+<p>Week 9 Signature: ____________________________</p>
+<p>Week 10 Signature: ____________________________</p>
+<p>Week 11 Signature: ____________________________</p>
+<p>Week 12 Signature: ____________________________</p>
+</body>
+</html>

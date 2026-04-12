@@ -5,6 +5,17 @@
 @section('content')
     <div class="row g-4">
         <div class="col-lg-8">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <div class="fw-bold mb-1">Unable to complete payment</div>
+                    <ul class="mb-0 ps-3">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="card mb-4">
                 <div class="card-header"><i class="fas fa-info-circle me-2"></i>Order Information</div>
                 <div class="card-body">
@@ -157,6 +168,16 @@
                         <button type="submit" class="btn btn-success w-100" {{ $dueAmount <= 0 ? 'disabled' : '' }}>
                             <i class="fas fa-credit-card me-2"></i>{{ $dueAmount <= 0 ? 'Fully Paid' : 'Record Payment' }}
                         </button>
+                    </form>
+
+                    <form action="{{ route('orders.payment.online', $order) }}" method="POST" class="mt-2">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary w-100"
+                            {{ $dueAmount <= 0 ? 'disabled' : '' }}>
+                            <i
+                                class="fas fa-globe me-2"></i>{{ $dueAmount <= 0 ? 'No Online Payment Needed' : 'Pay Online (bKash / Rocket / Card)' }}
+                        </button>
+                        <small class="text-muted d-block mt-1">Redirects to secure gateway checkout (SSLCommerz).</small>
                     </form>
 
                     <a href="{{ route('orders.receipt', $order) }}" class="btn btn-outline-secondary w-100 mt-2"
