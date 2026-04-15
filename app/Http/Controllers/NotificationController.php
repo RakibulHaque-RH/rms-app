@@ -58,6 +58,22 @@ class NotificationController extends Controller
         }
 
         if (in_array($user->role ?? '', ['admin', 'manager'])) {
+            if (Schema::hasColumn('orders', 'is_customer_approved') && Schema::hasColumn('orders', 'order_source')) {
+                $awaitingApproval = Order::where('order_source', 'customer')
+                    ->where('is_customer_approved', false)
+                    ->count();
+
+                if ($awaitingApproval > 0) {
+                    $notifications->push([
+                        'type' => 'warning',
+                        'title' => 'Customer Orders Awaiting Approval',
+                        'message' => $awaitingApproval . ' customer order(s) are waiting for manager/admin approval.',
+                        'link' => route('orders.index'),
+                        'link_text' => 'Review Orders',
+                    ]);
+                }
+            }
+
             $lowStockItems = Inventory::whereColumn('quantity', '<=', 'min_quantity')->count();
             if ($lowStockItems > 0) {
                 $notifications->push([

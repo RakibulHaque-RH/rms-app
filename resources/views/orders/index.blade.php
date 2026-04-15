@@ -33,9 +33,11 @@
                         <tr>
                             <th>Order #</th>
                             <th>Table</th>
+                            <th>Source</th>
                             <th>Waiter</th>
                             <th>Items</th>
                             <th>Status</th>
+                            <th>Approval</th>
                             <th>Payment</th>
                             <th>Total</th>
                             <th>Time</th>
@@ -48,9 +50,34 @@
                                 <td><strong>{{ $order->order_number }}</strong></td>
                                 <td><span class="badge bg-light text-dark">{{ $order->table->table_number ?? 'N/A' }}</span>
                                 </td>
+                                <td>
+                                    @if (($order->order_source ?? 'staff') === 'customer')
+                                        <span class="badge bg-info text-dark">Customer</span>
+                                    @else
+                                        <span class="badge bg-secondary">Staff</span>
+                                    @endif
+                                </td>
                                 <td>{{ $order->user->name ?? 'N/A' }}</td>
                                 <td>{{ $order->items->count() }} items</td>
                                 <td><span class="status-badge {{ $order->status }}">{{ ucfirst($order->status) }}</span>
+                                </td>
+                                <td>
+                                    @if (($order->order_source ?? 'staff') === 'customer')
+                                        @if ($order->is_customer_approved)
+                                            <span class="badge bg-success">Approved</span>
+                                        @else
+                                            <form action="{{ route('orders.approve-customer', $order) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button class="btn btn-sm btn-warning text-dark"
+                                                    title="Approve Customer Order">
+                                                    <i class="fas fa-check me-1"></i>Approve
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @else
+                                        <span class="badge bg-light text-dark">N/A</span>
+                                    @endif
                                 </td>
                                 <td>
                                     @if ($order->payment_status === 'paid')
@@ -86,7 +113,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center py-5">
+                                <td colspan="11" class="text-center py-5">
                                     <i class="fas fa-receipt fa-3x mb-3" style="color:var(--text-muted)"></i>
                                     <p class="text-muted">No orders found</p>
                                     <a href="{{ route('orders.create') }}" class="btn btn-primary btn-sm">Create First

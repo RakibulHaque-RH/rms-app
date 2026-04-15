@@ -21,13 +21,16 @@ class Order extends Model
         'paid_amount',
         'paid_at',
         'inventory_deducted_at',
-        'notes'
+        'notes',
+        'order_source',
+        'is_customer_approved',
     ];
     protected $casts = [
         'total_amount' => 'decimal:2',
         'paid_amount' => 'decimal:2',
         'paid_at' => 'datetime',
         'inventory_deducted_at' => 'datetime',
+        'is_customer_approved' => 'boolean',
     ];
 
     public function table()

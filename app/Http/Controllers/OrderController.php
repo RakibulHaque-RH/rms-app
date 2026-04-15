@@ -74,6 +74,8 @@ class OrderController extends Controller
             'table_id' => $request->table_id,
             'user_id' => auth()->id(),
             'status' => 'pending',
+            'order_source' => 'staff',
+            'is_customer_approved' => true,
             'notes' => $request->notes,
         ]);
 
@@ -124,6 +126,10 @@ class OrderController extends Controller
             }
         }
 
+        if ($order->order_source === 'customer' && !$order->is_customer_approved && $request->status !== 'cancelled') {
+            return back()->withErrors(['status' => 'Customer order must be approved by admin/manager before processing.']);
+        }
+
         $order->update(['status' => $request->status, 'notes' => $request->notes]);
 
         if (in_array($request->status, ['served', 'completed']) && $previousStatus !== $request->status) {
@@ -138,6 +144,21 @@ class OrderController extends Controller
             }
         }
         return redirect()->route('orders.index')->with('success', 'Order updated successfully!');
+    }
+
+    public function approveCustomerOrder(Order $order)
+    {
+        if ($order->order_source !== 'customer') {
+            return redirect()->route('orders.index')->withErrors(['approval' => 'Only customer orders require approval.']);
+        }
+
+        if ($order->is_customer_approved) {
+            return redirect()->route('orders.index')->with('success', 'Order already approved.');
+        }
+
+        $order->update(['is_customer_approved' => true]);
+
+        return redirect()->route('orders.index')->with('success', 'Customer order approved. Kitchen can now process it.');
     }
 
     public function destroy(Order $order)

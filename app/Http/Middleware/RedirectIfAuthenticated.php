@@ -6,6 +6,7 @@ use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
@@ -21,6 +22,16 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                $user = Auth::guard($guard)->user();
+
+                if (($user->role ?? null) === 'customer' && Route::has('customer.account')) {
+                    return redirect()->route('customer.account');
+                }
+
+                if (Route::has('dashboard')) {
+                    return redirect()->route('dashboard');
+                }
+
                 return redirect(RouteServiceProvider::HOME);
             }
         }

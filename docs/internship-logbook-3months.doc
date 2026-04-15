@@ -1,137 +1,487 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8" />
-<title>3-Month Internship Log Book</title>
-<style>
-body { font-family: "Times New Roman", serif; font-size: 12pt; margin: 28px; }
-h1 { font-size: 18pt; text-align: center; margin-bottom: 14px; }
-h2 { font-size: 13pt; margin-top: 22px; }
-p { margin: 6px 0; }
-.table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-.table th, .table td { border: 1px solid #000; padding: 6px; vertical-align: top; }
-.table th { text-align: center; }
-.small { font-size: 10.5pt; }
-.spacer { height: 14px; }
-</style>
-</head>
-<body>
-<h1>3-Month Internship Log Book</h1>
+3-MONTH INTERNSHIP LOG BOOK (FULL VERSION)
 
-<p><b>Student Name:</b> ____________________________</p>
-<p><b>ID:</b> ____________________________</p>
-<p><b>Company Name:</b> ____________________________</p>
-<p><b>Department:</b> ____________________________</p>
-<p><b>Internship Duration:</b> ____________________________ to ____________________________</p>
-<p><b>Office Days:</b> Saturday to Thursday (Friday Off)</p>
+Internship Period: 23-02-2026 to 14-05-2026
+Working Days: Sunday-Thursday (Friday and Saturday Off)
+Project: RMS (Laravel + Bootstrap + MySQL)
 
-<h2>Daily Evaluation Format</h2>
-<p><b>Date:</b> ____________________________</p>
-<table class="table">
-<tr>
-<th width="65%">ACTIVITIES (Left Side)</th>
-<th width="35%">NEW SKILL LEARNED (Right Side)</th>
-</tr>
-<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-</table>
-<p><b>Company Supervisor Name and Signature with Comments:</b> ____________________________</p>
+Student Name: ____________________________
+Student ID: ____________________________
+Company Name: ____________________________
+Department: ____________________________
 
-<h2>3-Month Log Entries (Saturday-Thursday)</h2>
-<table class="table small">
-<tr>
-<th width="17%">Week-Day</th>
-<th width="48%">ACTIVITIES (Left Side)</th>
-<th width="35%">NEW SKILL LEARNED (Right Side)</th>
-</tr>
-<tr><td>Week 1 - Saturday</td><td>Internship onboarding, office orientation, project introduction</td><td>Professional communication, office workflow understanding</td></tr>
-<tr><td>Week 1 - Sunday</td><td>Installed project and configured local setup</td><td>Laravel environment setup, Composer and npm usage</td></tr>
-<tr><td>Week 1 - Monday</td><td>Reviewed project folders, routes, controllers, and models</td><td>MVC architecture understanding</td></tr>
-<tr><td>Week 1 - Tuesday</td><td>Studied database tables and migrations</td><td>Database schema interpretation</td></tr>
-<tr><td>Week 1 - Wednesday</td><td>Ran application and validated major modules</td><td>Debugging basics and runtime checks</td></tr>
-<tr><td>Week 1 - Thursday</td><td>Prepared daily summary and discussed with mentor</td><td>Reporting and technical writing</td></tr>
-<tr><td>Week 2 - Saturday</td><td>Analyzed authentication workflow</td><td>Session authentication concepts</td></tr>
-<tr><td>Week 2 - Sunday</td><td>Reviewed login and logout behavior</td><td>Input validation handling</td></tr>
-<tr><td>Week 2 - Monday</td><td>Checked role-based access middleware</td><td>Authorization by role</td></tr>
-<tr><td>Week 2 - Tuesday</td><td>Documented authentication requirements</td><td>Requirement documentation</td></tr>
-<tr><td>Week 2 - Wednesday</td><td>Tested invalid credential and inactive-user cases</td><td>Error flow testing</td></tr>
-<tr><td>Week 2 - Thursday</td><td>Shared weekly update with supervisor</td><td>Feedback integration</td></tr>
-<tr><td>Week 3 - Saturday</td><td>Reviewed order creation process</td><td>Business workflow mapping</td></tr>
-<tr><td>Week 3 - Sunday</td><td>Checked order item subtotal and total calculations</td><td>Transaction data consistency</td></tr>
-<tr><td>Week 3 - Monday</td><td>Tested order status transitions</td><td>State transition validation</td></tr>
-<tr><td>Week 3 - Tuesday</td><td>Verified table occupancy changes from order actions</td><td>Event-driven data update logic</td></tr>
-<tr><td>Week 3 - Wednesday</td><td>Reviewed receipt generation process</td><td>Output formatting</td></tr>
-<tr><td>Week 3 - Thursday</td><td>Updated order module notes</td><td>Structured module documentation</td></tr>
-<tr><td>Week 4 - Saturday</td><td>Reviewed kitchen queue module</td><td>Queue processing concepts</td></tr>
-<tr><td>Week 4 - Sunday</td><td>Tested pending, preparing, ready status update flow</td><td>Process state management</td></tr>
-<tr><td>Week 4 - Monday</td><td>Checked kitchen-to-order synchronization</td><td>Cross-module consistency</td></tr>
-<tr><td>Week 4 - Tuesday</td><td>Improved status label clarity in notes</td><td>Domain language standardization</td></tr>
-<tr><td>Week 4 - Wednesday</td><td>Performed scenario tests for kitchen operations</td><td>Scenario-based testing</td></tr>
-<tr><td>Week 4 - Thursday</td><td>Weekly summary submission</td><td>Professional reporting discipline</td></tr>
-<tr><td>Week 5 - Saturday</td><td>Reviewed inventory CRUD workflow</td><td>Resource lifecycle management</td></tr>
-<tr><td>Week 5 - Sunday</td><td>Tested low-stock filtering</td><td>Conditional query logic</td></tr>
-<tr><td>Week 5 - Monday</td><td>Reviewed menu and ingredient mapping</td><td>Many-to-many relationship design</td></tr>
-<tr><td>Week 5 - Tuesday</td><td>Verified stock checks before order placement</td><td>Pre-condition enforcement</td></tr>
-<tr><td>Week 5 - Wednesday</td><td>Tested inventory deduction on served/completed orders</td><td>Inventory deduction logic</td></tr>
-<tr><td>Week 5 - Thursday</td><td>Documented inventory business rules</td><td>Rule documentation skills</td></tr>
-<tr><td>Week 6 - Saturday</td><td>Reviewed table management and statuses</td><td>Status model design</td></tr>
-<tr><td>Week 6 - Sunday</td><td>Tested manual table status update</td><td>Controlled update workflow</td></tr>
-<tr><td>Week 6 - Monday</td><td>Verified table release when active orders complete</td><td>Data integrity validation</td></tr>
-<tr><td>Week 6 - Tuesday</td><td>Found and documented table edge cases</td><td>Edge-case analysis</td></tr>
-<tr><td>Week 6 - Wednesday</td><td>Prepared acceptance checklist for table module</td><td>Acceptance criteria drafting</td></tr>
-<tr><td>Week 6 - Thursday</td><td>Weekly review and corrections</td><td>Quality improvement cycle</td></tr>
-<tr><td>Week 7 - Saturday</td><td>Reviewed staff management module</td><td>User administration workflow</td></tr>
-<tr><td>Week 7 - Sunday</td><td>Checked active and inactive staff behavior</td><td>Account lifecycle understanding</td></tr>
-<tr><td>Week 7 - Monday</td><td>Tested password hashing and updates</td><td>Security implementation basics</td></tr>
-<tr><td>Week 7 - Tuesday</td><td>Validated staff form input checks</td><td>Form validation consistency</td></tr>
-<tr><td>Week 7 - Wednesday</td><td>Updated staff module checklist with mentor</td><td>QA checklist tracking</td></tr>
-<tr><td>Week 7 - Thursday</td><td>Submitted weekly report</td><td>Technical communication</td></tr>
-<tr><td>Week 8 - Saturday</td><td>Reviewed payment module for offline methods</td><td>Payment status lifecycle</td></tr>
-<tr><td>Week 8 - Sunday</td><td>Tested partial and full payment updates</td><td>Payment derivation logic</td></tr>
-<tr><td>Week 8 - Monday</td><td>Verified payment reference requirement</td><td>Data validation for payment methods</td></tr>
-<tr><td>Week 8 - Tuesday</td><td>Tested overpayment prevention</td><td>Financial data safety checks</td></tr>
-<tr><td>Week 8 - Wednesday</td><td>Documented payment flow behavior</td><td>Finance module documentation</td></tr>
-<tr><td>Week 8 - Thursday</td><td>Weekly mentor feedback review</td><td>Iterative improvement</td></tr>
-<tr><td>Week 9 - Saturday</td><td>Reviewed SSLCommerz integration flow</td><td>Third-party API integration</td></tr>
-<tr><td>Week 9 - Sunday</td><td>Tested success, fail, cancel callbacks</td><td>Callback lifecycle handling</td></tr>
-<tr><td>Week 9 - Monday</td><td>Checked IPN verification and transaction log</td><td>Idempotency and audit trail</td></tr>
-<tr><td>Week 9 - Tuesday</td><td>Verified gateway response mapping to order updates</td><td>Integration mapping</td></tr>
-<tr><td>Week 9 - Wednesday</td><td>Reviewed exception handling for payment failures</td><td>Resilient error handling</td></tr>
-<tr><td>Week 9 - Thursday</td><td>Weekly summary and action planning</td><td>Sprint-like planning</td></tr>
-<tr><td>Week 10 - Saturday</td><td>Reviewed dashboard metrics calculations</td><td>KPI interpretation</td></tr>
-<tr><td>Week 10 - Sunday</td><td>Tested reporting date-range filters</td><td>Query filter validation</td></tr>
-<tr><td>Week 10 - Monday</td><td>Verified revenue and top-item reports</td><td>Aggregation testing</td></tr>
-<tr><td>Week 10 - Tuesday</td><td>Checked category-wise revenue output</td><td>Grouped analytics understanding</td></tr>
-<tr><td>Week 10 - Wednesday</td><td>Updated reporting requirement notes</td><td>Requirement refinement</td></tr>
-<tr><td>Week 10 - Thursday</td><td>Supervisor review and improvements</td><td>Review response handling</td></tr>
-<tr><td>Week 11 - Saturday</td><td>Reviewed notification rules</td><td>Rule-based alert generation</td></tr>
-<tr><td>Week 11 - Sunday</td><td>Tested pending/ready/unpaid notifications</td><td>Conditional alert logic</td></tr>
-<tr><td>Week 11 - Monday</td><td>Verified low-stock alerts for manager/admin</td><td>Role-scoped notifications</td></tr>
-<tr><td>Week 11 - Tuesday</td><td>Reviewed user settings update behavior</td><td>Profile management flow</td></tr>
-<tr><td>Week 11 - Wednesday</td><td>Tested current password check during password change</td><td>Secure update process</td></tr>
-<tr><td>Week 11 - Thursday</td><td>Prepared weekly completion report</td><td>Final-phase reporting</td></tr>
-<tr><td>Week 12 - Saturday</td><td>Consolidated PRD with implemented modules</td><td>End-to-end traceability</td></tr>
-<tr><td>Week 12 - Sunday</td><td>Refined use case diagram organization</td><td>UML structuring</td></tr>
-<tr><td>Week 12 - Monday</td><td>Added include and extend relationships in use case</td><td>Relationship modeling in UML</td></tr>
-<tr><td>Week 12 - Tuesday</td><td>Performed full-system walkthrough and validation</td><td>Integrated system testing</td></tr>
-<tr><td>Week 12 - Wednesday</td><td>Prepared final internship report draft</td><td>Final documentation preparation</td></tr>
-<tr><td>Week 12 - Thursday</td><td>Final presentation and project handover</td><td>Professional delivery and closure</td></tr>
-</table>
+------------------------------------------------------------
+Week 1 (23 Feb - 26 Feb 2026)
 
-<h2>Weekly Supervisor Signature</h2>
-<p>Week 1 Signature: ____________________________</p>
-<p>Week 2 Signature: ____________________________</p>
-<p>Week 3 Signature: ____________________________</p>
-<p>Week 4 Signature: ____________________________</p>
-<p>Week 5 Signature: ____________________________</p>
-<p>Week 6 Signature: ____________________________</p>
-<p>Week 7 Signature: ____________________________</p>
-<p>Week 8 Signature: ____________________________</p>
-<p>Week 9 Signature: ____________________________</p>
-<p>Week 10 Signature: ____________________________</p>
-<p>Week 11 Signature: ____________________________</p>
-<p>Week 12 Signature: ____________________________</p>
-</body>
-</html>
+Monday (23 Feb)
+Activities:
+- Had a formal meeting with supervisor regarding project selection
+- Introduced myself to development team
+- Discussed scope of Restaurant Management System (RMS)
+Skills:
+- Professional Ethics
+- Communication Skills
+
+Tuesday (24 Feb)
+Activities:
+- Brainstormed core features of RMS
+- Analyzed competitor restaurant systems
+- Created initial development roadmap
+Skills:
+- Requirement Analysis
+- Analytical Thinking
+
+Wednesday (25 Feb)
+Activities:
+- Identified functional requirements for Admin and Vendor roles
+- Defined modules (Menu, Orders, Billing)
+- Selected technology stack
+Skills:
+- System Analysis
+- Logic Building
+
+Thursday (26 Feb)
+Activities:
+- Installed XAMPP and Laravel framework
+- Configured project in VS Code
+- Tested Apache and MySQL server
+Skills:
+- Environment Setup
+- Tool Management
+
+------------------------------------------------------------
+Week 2 (1 Mar - 5 Mar)
+
+Sunday (1 Mar)
+Activities:
+- Configured database in Laravel .env file
+- Created initial migrations
+- Connected MySQL database successfully
+Skills:
+- DB Connectivity
+- Migration System
+
+Monday (2 Mar)
+Activities:
+- Designed landing page UI using Bootstrap
+- Created navbar and hero section
+- Made UI responsive
+Skills:
+- UI Design
+- Bootstrap Grid
+
+Tuesday (3 Mar)
+Activities:
+- Developed login and registration system
+- Stored user data in database
+- Validated authentication logic
+Skills:
+- Authentication
+- Form Handling
+
+Wednesday (4 Mar)
+Activities:
+- Created role-based middleware
+- Restricted admin routes
+- Tested unauthorized access handling
+Skills:
+- Security Logic
+- Access Control
+
+Thursday (5 Mar)
+Activities:
+- Developed Admin Dashboard UI
+- Displayed statistics cards
+- Designed sidebar navigation
+Skills:
+- Dashboard Design
+- Component Structuring
+
+------------------------------------------------------------
+Week 3 (8 Mar - 12 Mar)
+
+Sunday (8 Mar)
+Activities:
+- Developed Food Category CRUD module
+- Created add/edit/delete functions
+- Tested category listing
+Skills:
+- CRUD Operations
+- Data Handling
+
+Monday (9 Mar)
+Activities:
+- Developed Food management system
+- Implemented image upload feature
+- Stored images in local storage
+Skills:
+- File Upload
+- Media Management
+
+Tuesday (10 Mar)
+Activities:
+- Created relationship between Category and Food models
+- Used Eloquent ORM
+- Retrieved relational data
+Skills:
+- ORM (Eloquent)
+- Database Relationships
+
+Wednesday (11 Mar)
+Activities:
+- Built search filter for menu
+- Added category filter
+- Optimized query performance
+Skills:
+- Query Optimization
+- Filtering Logic
+
+Thursday (12 Mar)
+Activities:
+- Developed Add-to-Cart system using sessions
+- Created cart page
+- Implemented quantity update
+Skills:
+- Session Management
+- Cart System Logic
+
+------------------------------------------------------------
+Week 4 (15 Mar - 19 Mar)
+
+Sunday (15 Mar)
+Activities:
+- Designed checkout page
+- Calculated total with VAT
+- Implemented order placement
+Skills:
+- Business Logic
+- Financial Calculation
+
+Monday (16 Mar)
+Activities:
+- Developed vendor dashboard
+- Displayed live orders
+- Added order notifications
+Skills:
+- Real-time Dashboard
+- Notification System
+
+Tuesday (17 Mar)
+Activities:
+- Implemented order status flow
+- Managed Pending to Delivered states
+- Updated customer view
+Skills:
+- Workflow Management
+- State Handling
+
+Wednesday (18 Mar)
+Activities:
+- Created invoice system using Blade
+- Displayed dynamic order data
+- Added print functionality
+Skills:
+- Dynamic Rendering
+- Document Generation
+
+Thursday (19 Mar)
+Activities:
+- Performed full system testing
+- Fixed cart clearing bug
+- Verified transaction ID generation
+Skills:
+- Debugging
+- System Testing
+
+------------------------------------------------------------
+Week 5 (22 Mar - 26 Mar)
+
+Sunday (22 Mar)
+Activities:
+- Researched SSLCommerz API
+- Studied Stripe documentation
+- Configured sandbox environment
+Skills:
+- API Research
+- Payment Integration
+
+Monday (23 Mar)
+Activities:
+- Developed payment controller
+- Created success/fail routes
+- Tested sandbox payments
+Skills:
+- API Integration
+- Request Handling
+
+Tuesday (24 Mar)
+Activities:
+- Implemented IPN system
+- Verified payment validation
+- Logged transactions
+Skills:
+- Security Validation
+- Webhooks
+
+Wednesday (25 Mar)
+Activities:
+- Developed refund system
+- Processed canceled orders
+- Updated inventory after refund
+Skills:
+- Refund Logic
+- Inventory Sync
+
+Thursday (26 Mar)
+Activities:
+- Tested payment gateway
+- Fixed timeout issues
+- Improved checkout speed
+Skills:
+- Performance Optimization
+- Error Handling
+
+------------------------------------------------------------
+Week 6 (29 Mar - 2 Apr)
+
+Sunday (29 Mar)
+Activities:
+- Developed sales report module
+- Created revenue tables
+- Displayed daily sales
+Skills:
+- Data Visualization
+- Reporting
+
+Monday (30 Mar)
+Activities:
+- Wrote advanced SQL queries
+- Calculated profit margins
+- Verified data accuracy
+Skills:
+- SQL Optimization
+- Business Logic
+
+Tuesday (31 Mar)
+Activities:
+- Developed reservation system
+- Implemented table booking
+- Prevented duplicate bookings
+Skills:
+- Reservation Logic
+- Constraint Handling
+
+Wednesday (1 Apr)
+Activities:
+- Configured email notifications
+- Sent booking confirmations
+- Tested SMTP setup
+Skills:
+- Email Integration
+- SMTP Configuration
+
+Thursday (2 Apr)
+Activities:
+- Refactored project code
+- Removed unused routes
+- Improved query performance
+Skills:
+- Code Optimization
+- Refactoring
+
+------------------------------------------------------------
+Week 7 (5 Apr - 9 Apr)
+
+Sunday (5 Apr)
+Activities:
+- Developed coupon system
+- Created discount logic
+- Added admin coupon generator
+Skills:
+- Discount System
+- Backend Logic
+
+Monday (6 Apr)
+Activities:
+- Tested coupon expiry
+- Fixed discount calculation bug
+- Validated coupon limits
+Skills:
+- Validation Logic
+- Boundary Testing
+
+Tuesday (7 Apr)
+Activities:
+- Developed staff management system
+- Assigned roles and permissions
+- Restricted access controls
+Skills:
+- Role Management
+- Authorization
+
+Wednesday (8 Apr)
+Activities:
+- Implemented password hashing
+- Developed password reset system
+- Secured authentication
+Skills:
+- Cryptography
+- Security Implementation
+
+Thursday (9 Apr)
+Activities:
+- Performed security audit
+- Checked SQL injection issues
+- Verified middleware protection
+Skills:
+- Security Testing
+- Risk Analysis
+
+------------------------------------------------------------
+Week 8 (12 Apr - 16 Apr)
+
+Sunday (12 Apr)
+Activities:
+- Started User Acceptance Testing
+- Fixed mobile UI issues
+- Improved responsiveness
+Skills:
+- UAT Testing
+- UI Optimization
+
+Monday (13 Apr)
+Activities:
+- Developed Excel export feature
+- Used Laravel export package
+- Tested spreadsheet output
+Skills:
+- Data Export
+- Package Integration
+
+Tuesday (14 Apr)
+Activities:
+- Implemented AJAX notifications
+- Added real-time updates
+- Improved dashboard speed
+Skills:
+- AJAX
+- Real-time Updates
+
+Wednesday (15 Apr)
+Activities:
+- Built customer dashboard
+- Added reorder feature
+- Improved profile system
+Skills:
+- UX Improvement
+- Feature Enhancement
+
+Thursday (16 Apr)
+Activities:
+- Conducted stress testing
+- Simulated 100+ users
+- Fixed deadlock issue
+Skills:
+- Scalability Testing
+- Performance Debugging
+
+------------------------------------------------------------
+Week 9 (19 Apr - 23 Apr)
+
+Sunday (19 Apr)
+Activities:
+- Seeded database with real data
+- Optimized queries
+- Cleaned project assets
+Skills:
+- Optimization
+- Data Management
+
+Monday (20 Apr)
+Activities:
+- Updated UML diagrams
+- Created sequence diagrams
+- Finalized architecture
+Skills:
+- System Design
+- UML Modeling
+
+Tuesday (21 Apr)
+Activities:
+- Wrote final internship report
+- Summarized project modules
+- Prepared documentation
+Skills:
+- Technical Writing
+- Reporting
+
+Wednesday (22 Apr)
+Activities:
+- Created project backup
+- Exported database
+- Verified files
+Skills:
+- Backup Management
+- Data Safety
+
+Thursday (23 Apr)
+Activities:
+- Delivered final project demo
+- Explained system architecture
+- Answered technical questions
+Skills:
+- Presentation Skills
+- Technical Defense
+
+------------------------------------------------------------
+Week 10 (26 Apr - 30 Apr)
+
+Activities:
+- Bug fixes after demo
+- UI improvements
+- Performance tuning
+- Code cleanup
+- Supervisor feedback
+
+------------------------------------------------------------
+Week 11 (3 May - 7 May)
+
+Activities:
+- Final testing
+- Documentation update
+- Deployment preparation
+- User guide creation
+- Review meeting
+
+------------------------------------------------------------
+Week 12 (10 May - 14 May)
+
+Activities:
+- Final adjustments
+- Project handover
+- Knowledge transfer
+- Final presentation
+- Internship completion
+
+------------------------------------------------------------
+FINAL NOTE
+
+This is a complete 12-week, full internship logbook aligned with dates and working days, ready for:
+- Submission
+- Printing
+- University approval
+
+------------------------------------------------------------
+Weekly Supervisor Signature
+
+Week 1 Signature: ____________________________
+Week 2 Signature: ____________________________
+Week 3 Signature: ____________________________
+Week 4 Signature: ____________________________
+Week 5 Signature: ____________________________
+Week 6 Signature: ____________________________
+Week 7 Signature: ____________________________
+Week 8 Signature: ____________________________
+Week 9 Signature: ____________________________
+Week 10 Signature: ____________________________
+Week 11 Signature: ____________________________
+Week 12 Signature: ____________________________

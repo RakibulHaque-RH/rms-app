@@ -12,6 +12,10 @@ class KitchenController extends Controller
         // Get all pending and preparing orders
         $orders = Order::with(['items.menu', 'table'])
             ->whereIn('status', ['pending', 'preparing'])
+            ->where(function ($query) {
+                $query->where('order_source', '!=', 'customer')
+                    ->orWhere('is_customer_approved', true);
+            })
             ->orderBy('created_at', 'asc')
             ->get();
 
